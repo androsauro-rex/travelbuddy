@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,16 +31,19 @@ public class Itinerario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
 	private Integer id;
 	@Column(name = "titolo_viaggio", length = 128, nullable = false)
+	@NotNull(message = "Titolo Obbligatorio")
 	private String titoloViaggio;
 	@Column(nullable = false)
-	@Min(value = 0)
-	private Integer like;
+	@Min(value = 0, message = "I like non possono essere negativi")
+	private int like;
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumVisibilita visibilità;
 	@Column(name = "data_inizio_viaggio", nullable = false)
+	@NotNull(message = "Data Obbligatoria")
 	private LocalDate dataInizioViaggio;
 	@Column(name = "data_fine_viaggio", nullable = false)
+	@NotNull(message = "Data Obbligatoria")
 	private LocalDate dataFineViaggio;
 
 }
