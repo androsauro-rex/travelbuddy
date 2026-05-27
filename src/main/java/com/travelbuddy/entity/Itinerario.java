@@ -2,6 +2,8 @@ package com.travelbuddy.entity;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.travelbuddy.listaenum.EnumVisibilita;
 
 import jakarta.persistence.Column;
@@ -11,8 +13,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,21 +35,37 @@ public class Itinerario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
-	private Integer id;
+	private Long id;
+	
 	@Column(name = "titolo_viaggio", length = 128, nullable = false)
 	@NotNull(message = "Titolo Obbligatorio")
+	@NotBlank(message = "Il titolo del viaggio non può essere vuoto")
 	private String titoloViaggio;
+	
 	@Column(nullable = false)
 	@Min(value = 0, message = "I like non possono essere negativi")
 	private int like;
+	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumVisibilita visibilità;
+	
 	@Column(name = "data_inizio_viaggio", nullable = false)
 	@NotNull(message = "Data Obbligatoria")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dataInizioViaggio;
+	
 	@Column(name = "data_fine_viaggio", nullable = false)
 	@NotNull(message = "Data Obbligatoria")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dataFineViaggio;
+	
+	@ManyToOne
+	@JoinColumn(name = "idUtente")
+	private Utente utente; 
+	
+	@OneToOne
+	@JoinColumn(name = "idBudget")
+	private Budget budget; 
 
 }
