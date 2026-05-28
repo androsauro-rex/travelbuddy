@@ -44,7 +44,7 @@ public class Itinerario {
 	
 	@Column(nullable = false)
 	@Min(value = 0, message = "I like non possono essere negativi")
-	private int like;
+	private int likes;
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
