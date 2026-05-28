@@ -36,5 +36,13 @@ public interface UtenteRepository extends JpaRepository<Utente, Long>{
 	boolean existsByNicknameAndIdNot(String nickname, Long id);
 	
 	boolean existsByEmailAndIdNot(String email, Long id);
+	
+	
+	//Dato un diario, trovo l'utente
+	@Query("SELECT u FROM Utente u JOIN Diario d ON d.utente = u WHERE d.id = :idDiario")
+	Optional<Utente> findUtenteByDiarioId(@Param("idDiario") Long idDiario);
+	
+	
+	
 
 }
