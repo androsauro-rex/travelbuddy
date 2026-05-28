@@ -1,5 +1,7 @@
 package com.travelbuddy.entity;
 
+import java.math.BigDecimal;
+
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,11 +17,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,12 +63,19 @@ public class Itinerario {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dataFineViaggio;
 	
+	@Column(name = "budget_pianificato", nullable = false, precision = 10, scale = 2)
+	@NotNull(message = "Budget Pianificato Obbligatorio")
+	@Digits(fraction = 2, integer = 8, message = "Il Budget Pianificato da te inserito non ha un formato corretto")
+	@Positive(message = "Budget deve essere maggiore di 0")
+	private BigDecimal budgetPianificato; 
+	
 	@ManyToOne
 	@JoinColumn(name = "idUtente")
 	private Utente utente; 
 	
-	@OneToOne
-	@JoinColumn(name = "idBudget")
-	private Budget budget; 
+	
+	@ManyToOne
+	@JoinColumn(name = "idSpesa")
+	private Spesa spesa; 
 
 }
