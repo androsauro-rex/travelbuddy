@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +25,19 @@ public class Tappa {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
-	private Integer id;
-	@Column(nullable = false, length = 128)
+	private Long id;
+	
+	@Column(name = "nome_tappa", nullable = false, length = 128)
 	@NotNull(message = "Nome Tappa Obbligatorio")
-	private String nome;
+	@NotBlank(message = "Il nome della tappa non può essere vuoto")
+	private String nomeTappa;
+	
 	@Column(length = 2000)
+	@NotBlank(message = "La recensione non può essere vuota")
 	private String recensione;
+	
+	@ManyToOne 
+	@JoinColumn(name = "idGiorno")
+	private Giorno giorno; 
 
 }
