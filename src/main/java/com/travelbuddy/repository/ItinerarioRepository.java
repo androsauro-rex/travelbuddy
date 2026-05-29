@@ -22,8 +22,12 @@ public interface ItinerarioRepository extends JpaRepository<Itinerario, Long> {
 	List<Itinerario> findByDestinazioneNome(@Param("nome") String nomeDestinazione);
 	
 	
-	@Query("SELECT d.itinerario FROM Destinazione d "
-			+ "WHERE LOWER(d.nomeDestinazione) = LOWER(CONCAT('%', :nome, '%'))") 
+	@Query("""
+			SELECT d.itinerario
+		       FROM Destinazione d
+		       WHERE LOWER(d.nomeDestinazione)
+		       LIKE LOWER(CONCAT('%', :nome, '%'))
+			""")
 	List<Itinerario> findByDestinazioneWhereNomeDestinazioneLike(@Param("nome") String nomeDestinazione);
 	
 	
