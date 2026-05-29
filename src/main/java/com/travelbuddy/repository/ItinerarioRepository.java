@@ -31,13 +31,5 @@ public interface ItinerarioRepository extends JpaRepository<Itinerario, Long> {
 	@Query("SELECT i.visibilita FROM Itinerario i WHERE i.id = :id")
 	Optional<EnumVisibilita> findVisibilityById(@Param("id") Long id);
 	
-	
-//	@Query("SELECT u FROM Utente u JOIN Diario d ON d.utente = u WHERE d.id = :idDiario")
-//	Optional<Utente> findUtenteByDiarioId(@Param("idDiario") Long idDiario);
-	
-	//dato l'id di un diario, vogliamo trovare la lsita degli itinerari in esso presenti 
-	//in un diario possono essere caricati zero itinerari, per cui mettiamo Optional 
-	@Query("SELECT i FROM Itinerario i JOIN Diario d ON d.itinerario = i WHERE d.id = :idDiario")
-	List<Itinerario> findItinerarioByDiarioId(@Param("idDiario") Long idDiario); 
 
 }
