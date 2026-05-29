@@ -13,15 +13,15 @@ import com.travelbuddy.listaenum.EnumStatus;
 
 public interface UtenteRepository extends JpaRepository<Utente, Long>{
 	
-	List<Utente> findByNameIgnoreCase(String nome);
+	List<Utente> findByNomeIgnoreCase(String nome);
 	
-	List<Utente> findByLastNameIgnoreCase(String cognome);
+	List<Utente> findByCognomeIgnoreCase(String cognome);
 	
 	Optional<Utente> findByNicknameIgnoreCase(String nickname);
 	
 	Optional<Utente> findByEmail(String email);
 	
-	List<Utente> findByLastNameStartingWithIgnoreCase(String cognome);
+	List<Utente> findByCognomeStartingWithIgnoreCase(String cognome);
 	
 	@Query("SELECT u.ruolo FROM Utente u WHERE u.id = :id")
 	Optional<EnumRuolo> findRoleById(@Param("id") Long id);

@@ -51,7 +51,7 @@ public class Itinerario {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private EnumVisibilita visibilità;
+	private EnumVisibilita visibilita;
 	
 	@Column(name = "data_inizio_viaggio", nullable = false)
 	@NotNull(message = "Data Obbligatoria")
