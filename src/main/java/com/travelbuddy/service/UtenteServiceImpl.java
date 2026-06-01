@@ -162,31 +162,59 @@ public class UtenteServiceImpl implements UtenteService{
 
 	@Override
 	public String loginUtente(Utente utente) {
-		// TODO Auto-generated method stub
+		//IMPORTANTE: DEVO RICHIAMARE IL METODO banAccount --> se sei bannato, non puoi fare il login
+		
 		return null;
 	}
 
 	@Override
 	public void disattivazioneAccountUtente(Long id) {
-		// TODO Auto-generated method stub
+		Optional<Utente> utenteOpt = utenteRepository.findById(id);
+		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
+				+ " trovato"));
+		
+		utenteEsistente.setStatus(EnumStatus.DISATTIVO);
+		utenteRepository.save(utenteEsistente);
 		
 	}
 
 	@Override
 	public void riattivazioneAccountUtente(Long id) {
-		// TODO Auto-generated method stub
+		Optional<Utente> utenteOpt = utenteRepository.findById(id);
+		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
+				+ " trovato"));
+		
+		utenteEsistente.setStatus(EnumStatus.ATTIVO);
+		utenteRepository.save(utenteEsistente); 
 		
 	}
 
 	@Override
+	//solo l'admin può farlo --> La chiamata API del Controller si assicurerà che lo eseguirà 
+	//solo l'admin
 	public void banAccount(Long id) {
-		// TODO Auto-generated method stub
+		Optional<Utente> utenteOpt = utenteRepository.findById(id);
+		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
+				+ " trovato"));
+		
+		utenteEsistente.setStatus(EnumStatus.BANNATO);
+		utenteRepository.save(utenteEsistente);
 		
 	}
 
 	@Override
 	public void deleteUtenteById(Long id) {
-		// TODO Auto-generated method stub
+		
+		if(id == null) {
+			throw new IllegalArgumentException("Id " + id + " nullo"); 
+		}
+		
+		Optional<Utente> utenteOpt = utenteRepository.findById(id); 
+		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
+				+ " trovato"));
+		
+		utenteRepository.delete(utenteEsistente);
+		
 		
 	}
 
