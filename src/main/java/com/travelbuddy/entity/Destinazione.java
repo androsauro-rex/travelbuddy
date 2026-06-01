@@ -9,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "destinazioni")
@@ -20,8 +19,7 @@ public class Destinazione {
 	private Long id;
 	
 	@Column(name = "nome_destinazione", nullable = false, length = 128)
-	@NotNull(message = "Nome Destinazione Obbligatorio")
-	@NotBlank(message = "Il nome  della destinazione non può essere vuoto")
+	@NotBlank(message = "Il nome della destinazione è obbligatorio e non può essere vuoto")
 	private String nomeDestinazione;
 	
 	@ManyToOne
