@@ -20,6 +20,8 @@ public interface UtenteService {
 	 * modificarne lo stato e salvarla.
 	 */
 	
+	//FACOLTATIVO: dalla data di nascita, il programma in produzione aggiornerà l'età dell'utente
+	
 	List<Utente> findAllUtenti();
 	Utente findUtenteById(Long id); 
 	Utente findUtenteByNickname(String nickname); //nickname è unique
