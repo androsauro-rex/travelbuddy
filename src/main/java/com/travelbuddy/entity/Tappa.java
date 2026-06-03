@@ -9,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,8 +27,7 @@ public class Tappa {
 	private Long id;
 	
 	@Column(name = "nome_tappa", nullable = false, length = 128)
-	@NotNull(message = "Nome Tappa Obbligatorio")
-	@NotBlank(message = "Il nome della tappa non può essere vuoto")
+	@NotBlank(message = "Il nome della tappa è obbligatorio e non può essere vuoto")
 	private String nomeTappa;
 	
 	@Column(length = 2000)

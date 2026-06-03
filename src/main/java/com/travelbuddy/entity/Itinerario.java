@@ -41,8 +41,7 @@ public class Itinerario {
 	private Long id;
 	
 	@Column(name = "titolo_viaggio", length = 128, nullable = false)
-	@NotNull(message = "Titolo Obbligatorio")
-	@NotBlank(message = "Il titolo del viaggio non può essere vuoto")
+	@NotBlank(message = "Il titolo del viaggio è obbligatorio e non può essere vuoto")
 	private String titoloViaggio;
 	
 	@Column(nullable = false)
