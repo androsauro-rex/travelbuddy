@@ -5,12 +5,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Slf4j
 public class TappaDTO {
 	
 	@NotBlank(message = "Il nome della tappa è obbligatorio e non può essere vuoto")
