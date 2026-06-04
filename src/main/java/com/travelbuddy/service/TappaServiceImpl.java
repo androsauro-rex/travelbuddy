@@ -60,6 +60,26 @@ public class TappaServiceImpl implements TappaService{
 		tappaRepository.save(tappa); 
 		return tappa;
 	}
+	
+	@Override
+	@Transactional
+	public Tappa modificaTappa(Long idTappa, TappaDTO tappaDTO) {
+		validateId(idTappa);
+		if(tappaDTO == null) {
+			throw new IllegalArgumentException("Tappa passata nulla"); 
+		}
+		Optional<Tappa> tappaOpt = tappaRepository.findById(idTappa); 
+		Tappa tappa = tappaOpt.orElseThrow(() -> new NotFoundException("Tappa "
+				+ " con id " + idTappa + " non trovata"));
+		//update: modifichiamo solo i dati che vengono passati dal DTO che non sono null 
+		tappa.setNomeTappa(tappaDTO.getNomeTappa());
+		if(tappaDTO.getDescrizioneTappa() != null) {
+			tappa.setDescrizioneTappa(tappaDTO.getDescrizioneTappa());
+		}
+		tappaRepository.save(tappa); 
+		return tappa;
+	}
+	
 
 	@Override
 	public void deleteTappaById(Long idTappa) {
@@ -78,5 +98,7 @@ public class TappaServiceImpl implements TappaService{
 			throw new IllegalArgumentException("id nullo"); 
 		}
 	}
+
+	
 
 }
