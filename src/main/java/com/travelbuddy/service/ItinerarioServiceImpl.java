@@ -251,7 +251,7 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 		}
 		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) > 
 				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
-		 	//so' cazzi
+		 	
 		}
 		
 //		} else {
