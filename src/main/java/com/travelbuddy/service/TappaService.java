@@ -10,6 +10,7 @@ public interface TappaService {
 	List<Tappa> findAllTappeByGiornoId(Long idGiorno); 
 	Tappa findTappaById(Long idTappa);
 	Tappa aggiungiTappa(Long idGiorno, TappaDTO tappaDTO); 
+	Tappa modificaTappa(Long idTappa, TappaDTO tappaDTO); 
 	void deleteTappaById(Long idTappa); 
 	
 	
