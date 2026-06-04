@@ -14,7 +14,7 @@ import com.travelbuddy.listaenum.EnumRuolo;
 import com.travelbuddy.listaenum.EnumStatus;
 import com.travelbuddy.repository.UtenteRepository;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UtenteServiceImpl implements UtenteService{
