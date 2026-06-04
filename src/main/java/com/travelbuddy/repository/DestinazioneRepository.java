@@ -8,6 +8,8 @@ import com.travelbuddy.entity.Destinazione;
 
 public interface DestinazioneRepository extends JpaRepository<Destinazione, Long>{
 	
+	 
+	
 	//trova tutte le destinazioni dato l'Id dell'itinerario
 	List<Destinazione> findByItinerarioId(Long idItinerario); 
 	

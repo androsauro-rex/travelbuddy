@@ -30,9 +30,8 @@ public class Tappa {
 	@NotBlank(message = "Il nome della tappa è obbligatorio e non può essere vuoto")
 	private String nomeTappa;
 	
-	@Column(length = 2000)
-	@NotBlank(message = "La recensione non può essere vuota")
-	private String recensione;
+	@Column(name = "descrizione_tappa", length = 2000, nullable = true)
+	private String descrizioneTappa;
 	
 	@ManyToOne 
 	@JoinColumn(name = "idGiorno")
