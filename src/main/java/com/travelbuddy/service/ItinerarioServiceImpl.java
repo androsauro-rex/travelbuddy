@@ -199,6 +199,7 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 	}
 
 	@Override
+	@Transactional
 	public Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id) {
 		if(itinerarioDTO == null) {
 			throw new IllegalArgumentException("Itinerario passato nullo"); 
@@ -207,15 +208,25 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 		Itinerario itinerario = itinerarioOpt.orElseThrow(()-> new NotFoundException("Itinerario "
 				+ " con id " + id + " non trovato" ));
 		
-		itinerario.setTitoloViaggio(itinerarioDTO.getTitoloViaggio());
-		itinerario.setVisibilita(itinerarioDTO.getVisibilita());
-		if(itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
-			throw new BadRequestException("La data di fine viaggio non può essere antecedente "
-					+ "la data di fine viaggio"); 
-		} 
-		itinerario.setDataInizioViaggio(itinerarioDTO.getDataInizioViaggio());
-		itinerario.setDataFineViaggio(itinerarioDTO.getDataFineViaggio());
-		itinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
+		if(itinerarioDTO.getTitoloViaggio() != null) {
+			itinerario.setTitoloViaggio(itinerarioDTO.getTitoloViaggio());
+		}
+		if(itinerarioDTO.getVisibilita() != null) {
+			itinerario.setVisibilita(itinerarioDTO.getVisibilita());
+		}
+		if(itinerarioDTO.getDataInizioViaggio() != null && itinerarioDTO.getDataFineViaggio() != null) {
+			if(itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
+				throw new BadRequestException("La data di fine viaggio non può essere antecedente "
+						+ "la data di fine viaggio"); 
+			} else {
+				itinerario.setDataInizioViaggio(itinerarioDTO.getDataInizioViaggio());
+				itinerario.setDataFineViaggio(itinerarioDTO.getDataFineViaggio());
+			}
+		}
+		
+		if(itinerarioDTO.getBudgetPianificato() != null) {
+			itinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
+		}
 		
 		itinerarioRepository.save(itinerario); 
 		//DA FINIRE: GIORNO E TAPPE NON LE MODIFICHI UNA VOLTA CHE CAMBI DATA INIZIO E DATA FINE VIAGGIO?
