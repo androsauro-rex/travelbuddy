@@ -76,8 +76,6 @@ public class Itinerario {
 	private Utente utente; 
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "idSpesa")
-	private Spesa spesa; 
+	
 
 }
