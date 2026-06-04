@@ -10,12 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Slf4j
 public class GiornoDTO {
 	
 	@NotBlank(message = "Devi dare un nome al giorno o scrivere un elenco delle attività da fare")
