@@ -36,7 +36,12 @@ public class SecurityConfig {
                 .requestMatchers("/", "/index.html", "/app.js", "/style.css").permitAll()
                 .requestMatchers("/api/v1/public/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // utile per CORS
+                .requestMatchers("/api/v1/guest/**").hasRole("GUEST")
+                .requestMatchers("/api/v1/user/**").hasRole("USER")
+                .requestMatchers("/api/v1/moderator/**").hasRole("MODERATOR")
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/common/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+                .requestMatchers("/api/v1/mod-content/**").hasAnyRole("MODERATOR", "ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

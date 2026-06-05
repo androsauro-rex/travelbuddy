@@ -1,6 +1,5 @@
 package com.travelbuddy.service;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -202,7 +201,8 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 
 	@Override
 	@Transactional
-	public Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id) {
+	public Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id, 
+			List<Giorno> GiornoDTO) {
 		if(itinerarioDTO == null) {
 			throw new IllegalArgumentException("Itinerario passato nullo"); 
 		}
@@ -217,8 +217,8 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 			itinerario.setVisibilita(itinerarioDTO.getVisibilita());
 		}
 		
-		LocalDate dataInizioViaggioIniziale = itinerario.getDataInizioViaggio(); 
-		LocalDate dataFineViaggioIniziale = itinerario.getDataFineViaggio();
+//		LocalDate dataInizioViaggioIniziale = itinerario.getDataInizioViaggio(); 
+//		LocalDate dataFineViaggioIniziale = itinerario.getDataFineViaggio();
 		
 		
 		if(itinerarioDTO.getDataInizioViaggio() != null && itinerarioDTO.getDataFineViaggio() != null) {
@@ -235,37 +235,53 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 			itinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
 		}
 		
+		if(itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
+			throw new BadRequestException("La data di fine viaggio non può essere antecedente "
+					+ "la data di fine viaggio"); 
+		}
+		
+		if(GiornoDTO.size() != ChronoUnit.DAYS.between(itinerarioDTO.getDataInizioViaggio(), itinerarioDTO.getDataFineViaggio())) {
+			throw new BadRequestException("Il numero dei giorni di itinerari inseriti non corrisponde al numero dei giorni efettivi dell'itinerario");
+		}
+		
+		//controllo
+		for(Giorno g: GiornoDTO) {
+			if(g.getData().isBefore(itinerarioDTO.getDataInizioViaggio()) || 
+					g.getData().isAfter(itinerarioDTO.getDataFineViaggio())){
+				throw new BadRequestException("Le date passate non possono essere corrette"); 
+				}
+		}
+		
 		itinerarioRepository.save(itinerario);
 		
-		//controllo se le date sono state cambiate
-		//se i giorni cambiano ma il numero di giorni rimane lo stesso, devo shiftare le tappe nei giorni
-		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) == 
-				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
-			
-			//shiftare
-		}
-		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) < 
-				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
-		 	//scegli il giorno da rimuovere -> lo sceglie l'utente dal frontend
-			giornoRepository.deleteById(id);
-		}
-		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) > 
-				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
-		 	
-		}
-		
-//		} else {
+		//LO FA IL FRONT END (nel ChronoUnit mettere prima la data di inizio e poi la data di fine, 
+		//altrimenti si fa Math.abs(ChronoUnit. ...) : 
+//		//controllo se le date sono state cambiate
+//		//se i giorni cambiano ma il numero di giorni rimane lo stesso, devo shiftare le tappe nei giorni
+//		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) == 
+//				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
 //			
-//			if(!(dataInizioViaggioIniziale.isEqual(itinerarioDTO.getDataInizioViaggio())) 
-//					&& (!(dataFineViaggioIniziale.isEqual(itinerarioDTO.getDataFineViaggio())))) {
-//				//cambia tutto
+//			 
+//			List<Giorno> listaGiorniVecchi = giornoRepository.findGiornoByItinerarioId(itinerario.getId());
+//			int i = 0; 
+//			for(Giorno g: listaGiorniVecchi) {
+//				g.setData(dataInizioViaggioIniziale.plusDays(i));
+//				i++; 
 //			}
-//			if(!(dataInizioViaggioIniziale.isEqual(itinerarioDTO.getDataInizioViaggio()))){
-//				//cambia solo la data iniziale 
-//			}
-//			if(!(dataFineViaggioIniziale.isEqual(itinerarioDTO.getDataFineViaggio()))){
-//				//cambia solo la data finale
-//			} 
+//			giornoRepository.saveAll(listaGiorniVecchi); 
+//			
+//			
+//			
+//		}
+//		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) < 
+//				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
+//		 	//scegli il giorno o i giorni da rimuovere -> lo sceglie l'utente dal frontend
+//			giornoRepository.deleteById(id);
+//		}
+//		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) > 
+//				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
+//		 	
+//		}
 		
 		return itinerario;
 	}
