@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelBuddy Dashboard</title>
+
+  <link rel="stylesheet" href="style/dashboard.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">Travel<span>Buddy</span></div>
+    <button class="btn-secondary">Logout</button>
+  </div>
+</nav>
+
+<main class="dashboard">
+
+  <section class="create-trip-section">
+    <h1 class="page-title">I tuoi viaggi</h1>
+    <p class="page-subtitle">Organizza, modifica e pubblica i tuoi itinerari.</p>
+
+    <button id="createTripBtn" class="btn-primary">+ Crea nuovo itinerario</button>
+  </section>
+
+  <section>
+    <h2 class="section-title">📋 Bozze</h2>
+    <div id="draftTripsContainer" class="trips-grid"></div>
+  </section>
+
+  <section>
+    <h2 class="section-title">🌍 Pubblicati</h2>
+    <div id="publishedTripsContainer" class="trips-grid"></div>
+  </section>
+
+</main>
+
+<!-- ============ MODALE ITINERARIO ============ -->
+<div id="tripModal" class="modal hidden">
+  <div id="modalContent" class="modal-content">
+
+    <button id="closeModalBtn" class="modal-close">✕</button>
+
+    <h2>Nuovo itinerario</h2>
+
+    <div class="form-group">
+      <label>Destinazione</label>
+      <input id="tripDestination" type="text" placeholder="Es. Tokyo, Parigi, Roma...">
+    </div>
+
+    <div class="form-group">
+      <label>Titolo</label>
+      <input id="tripTitle" type="text">
+    </div>
+
+    <div class="form-group">
+      <label>Visibilità</label>
+
+      <div class="toggle">
+        <label class="toggle-wrapper">
+          <input type="checkbox" id="visibilityToggle" />
+          <span class="toggle-slider"></span>
+        </label>
+
+        <span id="visibilityLabel" class="toggle-label">Privato</span>
+      </div>
+    </div>
+
+    <div class="dates-grid">
+      <div class="form-group">
+        <label>Inizio</label>
+        <input id="startDate" type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Fine</label>
+        <input id="endDate" type="date">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Budget Pianificato (€)</label>
+      <input id="tripBudget" type="number" step="0.01" min="0" placeholder="0.00">
+    </div>
+
+    <!-- NUOVI CAMPI COSTI OBBLIGATORI -->
+    <div class="dates-grid">
+      <div class="form-group">
+        <label>Costo Trasporti (€) *</label>
+        <input id="tripTransport" type="number" step="0.01" min="0" placeholder="Voli, treni, bus...">
+      </div>
+
+      <div class="form-group">
+        <label>Costo Alloggi (€) *</label>
+        <input id="tripLodging" type="number" step="0.01" min="0" placeholder="Hotel, ostelli, B&B...">
+      </div>
+    </div>
+
+    <button id="generateDaysBtn" class="btn-secondary" style="margin-top: 1rem;">Genera / Aggiorna giorni</button>
+
+    <div id="daysContainer" class="days-container"></div>
+
+    <div class="trip-actions" style="margin-top: 2rem;">
+      <button id="saveDraftBtn" class="btn-secondary">Salva bozza</button>
+      <button id="publishBtn" class="btn-primary">Pubblica</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ MODALE GESTIONE SPESE EXTRA ============ -->
+<div id="speseModal" class="modal hidden">
+  <div id="speseModalContent" class="modal-content">
+
+    <button id="closeSpeseModalBtn" class="modal-close">✕</button>
+
+    <h2>Gestione Spese</h2>
+    <p class="page-subtitle" id="speseModalSubtitle">Spese extra dell'itinerario</p>
+
+    <!-- Lista spese esistenti -->
+    <div id="speseExtraList" class="spese-extra-list"></div>
+
+    <!-- Totale -->
+    <div id="speseExtraTotal" class="spese-extra-total"></div>
+
+    <!-- Form aggiunta spesa -->
+    <div class="add-spesa-box" style="margin-top: 1.5rem;">
+      <p class="new-stage-title">➕ Aggiungi una nuova spesa</p>
+
+      <div class="form-group">
+        <label>Nome spesa</label>
+        <input type="text" id="speseExtraNome" class="spesa-desc-input" placeholder="Es. Pranzo al ristorante">
+      </div>
+
+      <div class="spesa-input-row" style="margin-top: 0.8rem;">
+        <select id="speseExtraTipo" class="spesa-select">
+          <option value="">Seleziona tipologia...</option>
+        </select>
+        <input type="number" id="speseExtraCosto" class="spesa-cost-input" placeholder="€ Costo" step="0.01" min="0">
+      </div>
+
+      <button type="button" id="addSpeseExtraBtn" class="btn-spesa">+ Aggiungi Spesa</button>
+    </div>
+
+    <div class="trip-actions" style="margin-top: 2rem;">
+      <button id="saveSpeseBtn" class="btn-primary">Salva spese</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ MODALE SELEZIONE GIORNI DA RIMUOVERE ============ -->
+<div id="daySelectionModal" class="modal hidden">
+  <div id="daySelectionContent" class="modal-content" style="max-width: 600px;">
+
+    <button id="closeDaySelectionBtn" class="modal-close">✕</button>
+
+    <h2>Riduci giorni del viaggio</h2>
+    <p class="page-subtitle" id="daySelectionSubtitle"></p>
+
+    <div id="daySelectionList" class="day-selection-list"></div>
+
+    <div class="trip-actions" style="margin-top: 2rem;">
+      <button id="cancelDaySelectionBtn" class="btn-secondary">Annulla</button>
+      <button id="confirmDaySelectionBtn" class="btn-danger" disabled>Conferma rimozione</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script/dashboard.js"></script>
+
+</body>
+</html>
