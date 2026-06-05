@@ -7,6 +7,7 @@ import com.travelbuddy.dto.GiornoDTO;
 import com.travelbuddy.dto.ItinerarioCreateDTO;
 import com.travelbuddy.dto.ItinerarioUpdateDTO;
 import com.travelbuddy.dto.TappaDTO;
+import com.travelbuddy.entity.Giorno;
 import com.travelbuddy.entity.Itinerario;
 
 public interface ItinerarioService {
@@ -22,7 +23,7 @@ public interface ItinerarioService {
 			DestinazioneDTO destinazioneDTO, 
 			List<GiornoDTO> listaGiorni, 
 			List<TappaDTO> listaTappe); 
-	Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id);   
+	Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id, List<Giorno> GiornoDTO);   
 	void aggiuntaLike(Itinerario itinerario); 
 	//trovi l'id dell'itinerario -> getLike -> incrementi like 
 	void rimuoviLike(Itinerario itinerario); 

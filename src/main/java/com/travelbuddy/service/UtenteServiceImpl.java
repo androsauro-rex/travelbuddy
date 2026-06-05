@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.travelbuddy.dto.UtenteCreateDTO;
+import com.travelbuddy.dto.UtenteReplaceDTO;
 import com.travelbuddy.dto.UtenteUpdateDTO;
 import com.travelbuddy.entity.Utente;
 import com.travelbuddy.exception.NotFoundException;
@@ -66,7 +67,7 @@ public class UtenteServiceImpl implements UtenteService{
 	
 	@Override
 	@Transactional
-	public Utente replaceUtenteById(UtenteUpdateDTO utenteDTO, Long id) {
+	public Utente replaceUtenteById(UtenteReplaceDTO utenteDTO, Long id) {
 		if(utenteDTO == null) {
 			throw new IllegalArgumentException("L'utente passato è nullo"); 
 		}
