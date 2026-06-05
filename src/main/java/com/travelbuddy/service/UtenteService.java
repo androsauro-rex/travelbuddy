@@ -29,7 +29,6 @@ public interface UtenteService {
 	Utente replaceUtenteById(UtenteUpdateDTO utenteDTO, Long id);
 	Utente updateUtenteById(UtenteUpdateDTO utenteDTO, Long id); 
 	Utente RegistrazioneNuovoUtente(UtenteCreateDTO utenteDTO); //l'utente dev'essere un guest
-	String loginUtente(Utente utente); //il guest non può loggarsi 
 	//disattivazione account 
 	void disattivazioneAccountUtente(Long id); //lo status passa da attivo a disattivo
 	//riattivazione account 
