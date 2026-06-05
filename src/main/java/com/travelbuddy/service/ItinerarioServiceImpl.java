@@ -1,5 +1,7 @@
 package com.travelbuddy.service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -214,6 +216,11 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 		if(itinerarioDTO.getVisibilita() != null) {
 			itinerario.setVisibilita(itinerarioDTO.getVisibilita());
 		}
+		
+		LocalDate dataInizioViaggioIniziale = itinerario.getDataInizioViaggio(); 
+		LocalDate dataFineViaggioIniziale = itinerario.getDataFineViaggio();
+		
+		
 		if(itinerarioDTO.getDataInizioViaggio() != null && itinerarioDTO.getDataFineViaggio() != null) {
 			if(itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
 				throw new BadRequestException("La data di fine viaggio non può essere antecedente "
@@ -228,9 +235,37 @@ public class ItinerarioServiceImpl implements ItinerarioService{
 			itinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
 		}
 		
-		itinerarioRepository.save(itinerario); 
-		//DA FINIRE: GIORNO E TAPPE NON LE MODIFICHI UNA VOLTA CHE CAMBI DATA INIZIO E DATA FINE VIAGGIO?
-		//MA CERTO CHE SI' !!
+		itinerarioRepository.save(itinerario);
+		
+		//controllo se le date sono state cambiate
+		//se i giorni cambiano ma il numero di giorni rimane lo stesso, devo shiftare le tappe nei giorni
+		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) == 
+				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
+			
+			//shiftare
+		}
+		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) < 
+				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
+		 	//scegli il giorno da rimuovere -> lo sceglie l'utente dal frontend
+			giornoRepository.deleteById(id);
+		}
+		if(ChronoUnit.DAYS.between(dataFineViaggioIniziale, dataInizioViaggioIniziale) > 
+				ChronoUnit.DAYS.between(itinerarioDTO.getDataFineViaggio(), itinerarioDTO.getDataInizioViaggio())) {
+		 	
+		}
+		
+//		} else {
+//			
+//			if(!(dataInizioViaggioIniziale.isEqual(itinerarioDTO.getDataInizioViaggio())) 
+//					&& (!(dataFineViaggioIniziale.isEqual(itinerarioDTO.getDataFineViaggio())))) {
+//				//cambia tutto
+//			}
+//			if(!(dataInizioViaggioIniziale.isEqual(itinerarioDTO.getDataInizioViaggio()))){
+//				//cambia solo la data iniziale 
+//			}
+//			if(!(dataFineViaggioIniziale.isEqual(itinerarioDTO.getDataFineViaggio()))){
+//				//cambia solo la data finale
+//			} 
 		
 		return itinerario;
 	}
