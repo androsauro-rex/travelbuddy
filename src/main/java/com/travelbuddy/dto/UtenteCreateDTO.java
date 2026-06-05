@@ -1,6 +1,6 @@
 package com.travelbuddy.dto;
 
-import com.travelbuddy.listaenum.EnumRuolo;
+import com.travelbuddy.listaenum.EnumRoles;
 import com.travelbuddy.listaenum.EnumStatus;
 
 import jakarta.persistence.EnumType;
@@ -41,7 +41,7 @@ public class UtenteCreateDTO {
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
-	private EnumRuolo ruolo;
+	private EnumRoles ruolo;
 	
 	@Enumerated(EnumType.STRING)
 	private EnumStatus status; 

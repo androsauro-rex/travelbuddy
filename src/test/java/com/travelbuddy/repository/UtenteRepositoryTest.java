@@ -1,12 +1,12 @@
 package com.travelbuddy.repository;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.travelbuddy.listaenum.EnumRuolo;
+import com.travelbuddy.listaenum.EnumRoles;
 
 //importazione jUnit
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,20 +31,20 @@ public class UtenteRepositoryTest {
 	void findRoleByIdEqualsUser() {
 		Long id = 1L;
 
-		Optional<EnumRuolo> ruolo = utenteRepository.findRoleById(id);
+		Optional<EnumRoles> ruolo = utenteRepository.findRoleById(id);
 
 		assertTrue(ruolo.isPresent());
-		assertEquals(EnumRuolo.USER, ruolo.get());
+		assertEquals(EnumRoles.ROLE_USER, ruolo.get());
 	}
 	
 	@Test
 	void findRoleByIdNotEqualsUser() {
 		Long id = 1L;
 
-		Optional<EnumRuolo> ruolo = utenteRepository.findRoleById(id);
+		Optional<EnumRoles> ruolo = utenteRepository.findRoleById(id);
 
 		assertTrue(ruolo.isPresent());
-		assertNotEquals(EnumRuolo.ADMIN, ruolo.get());
+		assertNotEquals(EnumRoles.ROLE_ADMIN, ruolo.get());
 	}
 	
 	
