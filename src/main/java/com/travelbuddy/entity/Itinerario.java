@@ -75,7 +75,4 @@ public class Itinerario {
 	@JoinColumn(name = "idUtente")
 	private Utente utente; 
 	
-	
-	
-
 }
