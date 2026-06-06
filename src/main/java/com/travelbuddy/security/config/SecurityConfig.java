@@ -33,7 +33,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index.html", "/app.js", "/style.css").permitAll()
+                .requestMatchers("/", "/index.html", "/script.js", "/style.css").permitAll()
                 .requestMatchers("/api/v1/public/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // utile per CORS
                 .requestMatchers("/api/v1/guest/**").hasRole("GUEST")
