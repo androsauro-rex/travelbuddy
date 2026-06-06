@@ -1,7 +1,8 @@
 package com.travelbuddy.dto;
 
-
 import java.util.List;
+
+import com.travelbuddy.entity.Giorno;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GiornoCreateDTO {
+public class ModificaItinerarioDTO {
 	
-	private List<GiornoDTO> giorniDaAggiungere;
-	//JSON con le parentesi graffe che, al suo interno, avrà un array di giorni
+	private final ItinerarioUpdateDTO itinerarioDTO; 
+	private final List<Giorno> giornoDTO; 
+	
 }

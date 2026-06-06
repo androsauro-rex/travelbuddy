@@ -1,7 +1,8 @@
 package com.travelbuddy.entity;
 
 import com.travelbuddy.entity.Utente;
-import com.travelbuddy.listaenum.EnumRuolo;
+import com.travelbuddy.listaenum.EnumRoles;
+
 import com.travelbuddy.listaenum.EnumStatus;
 
 import jakarta.persistence.Column;
@@ -63,7 +64,7 @@ public class Utente {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private EnumRuolo ruolo;
+	private EnumRoles ruolo;
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)

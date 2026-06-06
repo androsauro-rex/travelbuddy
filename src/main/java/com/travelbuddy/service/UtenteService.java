@@ -3,6 +3,7 @@ package com.travelbuddy.service;
 import java.util.List;
 
 import com.travelbuddy.dto.UtenteCreateDTO;
+import com.travelbuddy.dto.UtenteReplaceDTO;
 import com.travelbuddy.dto.UtenteUpdateDTO;
 import com.travelbuddy.entity.Utente;
 
@@ -26,10 +27,9 @@ public interface UtenteService {
 	Utente findUtenteById(Long id); 
 	Utente findUtenteByNickname(String nickname); //nickname è unique
 	Utente findUtenteByEmail(String email); //email è unique
-	Utente replaceUtenteById(UtenteUpdateDTO utenteDTO, Long id);
+	Utente replaceUtenteById(UtenteReplaceDTO utenteDTO, Long id);
 	Utente updateUtenteById(UtenteUpdateDTO utenteDTO, Long id); 
 	Utente RegistrazioneNuovoUtente(UtenteCreateDTO utenteDTO); //l'utente dev'essere un guest
-	String loginUtente(Utente utente); //il guest non può loggarsi 
 	//disattivazione account 
 	void disattivazioneAccountUtente(Long id); //lo status passa da attivo a disattivo
 	//riattivazione account 
