@@ -1,6 +1,6 @@
 package com.travelbuddy.repository;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.travelbuddy.entity.Utente;
-import com.travelbuddy.listaenum.EnumRuolo;
+import com.travelbuddy.listaenum.EnumRoles;
 import com.travelbuddy.listaenum.EnumStatus;
 
 public interface UtenteRepository extends JpaRepository<Utente, Long>{
@@ -24,7 +24,7 @@ public interface UtenteRepository extends JpaRepository<Utente, Long>{
 	List<Utente> findByCognomeStartingWithIgnoreCase(String cognome);
 	
 	@Query("SELECT u.ruolo FROM Utente u WHERE u.id = :id")
-	Optional<EnumRuolo> findRoleById(@Param("id") Long id);
+	Optional<EnumRoles> findRoleById(@Param("id") Long id);
 	
 	@Query("SELECT u.status FROM Utente u WHERE u.id = :id")
 	Optional<EnumStatus> findStatusById(@Param("id") Long id);

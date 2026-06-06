@@ -1,6 +1,5 @@
 package com.travelbuddy.dto;
 
-import com.travelbuddy.listaenum.EnumRoles;
 import com.travelbuddy.listaenum.EnumStatus;
 
 import jakarta.persistence.EnumType;
@@ -17,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UtenteCreateDTO {
+public class UtenteReplaceDTO {
 	
 	@NotBlank(message = "Il nome è obbligatorio e non può essere vuoto")
 	private String nome;
@@ -40,8 +39,6 @@ public class UtenteCreateDTO {
 	@NotBlank(message = "Password Obbligatoria")
 	private String password;
 	
-	@Enumerated(EnumType.STRING)
-	private EnumRoles ruolo;
 	
 	@Enumerated(EnumType.STRING)
 	private EnumStatus status; 

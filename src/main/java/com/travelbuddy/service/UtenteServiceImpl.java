@@ -1,16 +1,17 @@
 package com.travelbuddy.service;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.travelbuddy.dto.UtenteCreateDTO;
+import com.travelbuddy.dto.UtenteReplaceDTO;
 import com.travelbuddy.dto.UtenteUpdateDTO;
 import com.travelbuddy.entity.Utente;
 import com.travelbuddy.exception.NotFoundException;
 import com.travelbuddy.exception.UserAlreadyExistsException;
-import com.travelbuddy.listaenum.EnumRuolo;
+import com.travelbuddy.listaenum.EnumRoles;
 import com.travelbuddy.listaenum.EnumStatus;
 import com.travelbuddy.repository.UtenteRepository;
 
@@ -66,7 +67,7 @@ public class UtenteServiceImpl implements UtenteService{
 	
 	@Override
 	@Transactional
-	public Utente replaceUtenteById(UtenteUpdateDTO utenteDTO, Long id) {
+	public Utente replaceUtenteById(UtenteReplaceDTO utenteDTO, Long id) {
 		if(utenteDTO == null) {
 			throw new IllegalArgumentException("L'utente passato è nullo"); 
 		}
@@ -155,16 +156,9 @@ public class UtenteServiceImpl implements UtenteService{
 		nuovoUtente.setEta(utenteDTO.getEta());
 		nuovoUtente.setPassword(utenteDTO.getPassword());
 		//il nuovo ruolo è ora USER 
-		nuovoUtente.setRuolo(EnumRuolo.USER);
+		nuovoUtente.setRuolo(EnumRoles.ROLE_USER);
 		nuovoUtente.setStatus(EnumStatus.ATTIVO);
 		return utenteRepository.save(nuovoUtente);
-	}
-
-	@Override
-	public String loginUtente(Utente utente) {
-		//IMPORTANTE: DEVO RICHIAMARE IL METODO banAccount --> se sei bannato, non puoi fare il login
-		
-		return null;
 	}
 
 	@Override
