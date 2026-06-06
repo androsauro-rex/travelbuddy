@@ -3,6 +3,7 @@ package com.travelbuddy.service;
 import java.util.List; 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.travelbuddy.dto.UtenteCreateDTO;
@@ -22,9 +23,11 @@ public class UtenteServiceImpl implements UtenteService{
 	
 	//Dependency Injection 
 	public final UtenteRepository utenteRepository; 
+	 private final PasswordEncoder passwordEncoder;
 	
-	public UtenteServiceImpl(UtenteRepository utenteRepository) {
+	public UtenteServiceImpl(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder ) {
 		this.utenteRepository = utenteRepository; 
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	
@@ -154,7 +157,7 @@ public class UtenteServiceImpl implements UtenteService{
 		nuovoUtente.setEmail(utenteDTO.getEmail());
 		nuovoUtente.setNickname(utenteDTO.getNickname());
 		nuovoUtente.setEta(utenteDTO.getEta());
-		nuovoUtente.setPassword(utenteDTO.getPassword());
+		nuovoUtente.setPassword(passwordEncoder.encode(utenteDTO.getPassword()));
 		//il nuovo ruolo è ora USER 
 		nuovoUtente.setRuolo(EnumRoles.ROLE_USER);
 		nuovoUtente.setStatus(EnumStatus.ATTIVO);

@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         return buildError(ex.getMessage(), HttpStatus.CONFLICT);
     }
     
-    @ExceptionHandler(DuplicatedResourceException.class)
+    @ExceptionHandler(UserAlreadyExistsException.class) 
     public ResponseEntity<ApiErrorDto> handleAlreadyExists(UserAlreadyExistsException ex) {
         return buildError(ex.getMessage(), HttpStatus.CONFLICT);
     }
