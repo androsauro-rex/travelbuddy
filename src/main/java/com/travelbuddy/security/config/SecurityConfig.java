@@ -55,20 +55,31 @@ public class SecurityConfig {
     }
     // Configurazione di CORS
     // Serve perché il frontend chiama AUTH su: http://localhost:8081
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of(
+//                "http://localhost:8080", 
+//                "http://localhost:5500", 
+//                "http://127.0.0.1:5500"));
+//        //configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        //configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+//        configuration.setAllowedMethods(List.of("*"));
+//        configuration.setAllowedHeaders(List.of("*"));
+//        configuration.setAllowCredentials(false);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:8080", 
-                "http://localhost:5500", 
-                "http://127.0.0.1:5500"));
-        //configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        //configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(false);
+     CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost")); // XAMPP
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 	
