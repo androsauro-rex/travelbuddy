@@ -250,7 +250,7 @@ async function handleFormSubmit(e) {
   submitBtn.textContent = '⏳ Registrazione in corso...';
 
   try {
-    const response = await fetch('http://localhost:8080/api/v1/guest/registrazione', {
+    const response = await fetch('http://localhost:8080/api/v1/public/registrazione', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
