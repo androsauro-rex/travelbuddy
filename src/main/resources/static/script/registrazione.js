@@ -19,8 +19,7 @@ let validationState = {
   email: false,
   eta: false,
   password: false,
-  // ✅ MODIFICA 1: rimosso "termini" — era commentato qui ma scritto
-  // dinamicamente da validateCheckbox(), causando comportamento imprevedibile
+
 };
 
 // ================= EVENT LISTENERS =================
@@ -158,9 +157,6 @@ function validatePassword() {
   updateButtonState();
 }
 
-// ✅ MODIFICA 3: rimossa la funzione validateCheckbox() interamente —
-// scriveva validationState.termini dinamicamente anche se non era
-// dichiarato nel validationState, inquinando Object.values()
 
 // ================= UPDATE BUTTON STATE =================
 
@@ -219,15 +215,13 @@ function removeError(input) {
 
 async function handleFormSubmit(e) {
   e.preventDefault();
-
   validateName();
   validateSurname();
   validateNickname();
   validateAge();
   validateEmail();
   validatePassword();
-  // ✅ MODIFICA 4: rimossa chiamata a validateCheckbox() — non esiste più
-
+  
   const isFormValid = Object.values(validationState).every(value => value === true);
 
   if (!isFormValid) {
@@ -259,16 +253,14 @@ async function handleFormSubmit(e) {
     });
 
     if (response.ok) {
-      // ✅ MODIFICA 5: rimossa la lettura di data.token — la registrazione
-      // restituisce l'Utente creato, non un token JWT. Il token si ottiene
-      // solo dopo il login. Rimosso anche il salvataggio in localStorage.
-      showNotification('Registrazione completata! Benvenuto su TravelBuddy! 🎉', 'success');
+     
+      showNotification('Registrazione completata! Benvenuto su TravelBuddy!', 'success');
       setTimeout(() => {
-        window.location.href = 'login.html'; // ✅ MODIFICA 6: redirect al login, non alla dashboard
+        window.location.href = 'login.html'; //
       }, 2000);
 
     } else if (response.status === 409) {
-      // ✅ MODIFICA 7: gestione esplicita per email/nickname duplicati
+      
       const errorData = await response.json();
       showNotification(errorData.message || 'Email o nickname già in uso', 'error');
       resetButton();
@@ -287,9 +279,7 @@ async function handleFormSubmit(e) {
     }
 
   } catch (error) {
-    // ✅ MODIFICA 8: rimosso il fallback saveUserLocally — se il server
-    // non risponde, l'utente non è registrato nel DB. Fingere il contrario
-    // è scorretto. Si mostra semplicemente un errore.
+  
     console.error('Errore di rete:', error);
     showNotification('Impossibile contattare il server. Riprova più tardi.', 'error');
     resetButton();
