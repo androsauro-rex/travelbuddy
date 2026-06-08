@@ -10,8 +10,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class AdminUtenteUpdateDTO {
+@Getter
+@Setter
+@NoArgsConstructor
+public class AdminUtenteDTO {
 	
 	
 	@NotBlank(message = "Il nome è obbligatorio e non può essere vuoto")
@@ -30,6 +36,8 @@ public class AdminUtenteUpdateDTO {
 	@NotNull(message = "Età Obbligatoria")
 	@Positive(message = "L'età deve essere maggiore di 18")
 	private Integer eta;
+	
+	//dubbio nel mettere la password
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)

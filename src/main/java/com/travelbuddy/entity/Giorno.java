@@ -44,4 +44,5 @@ public class Giorno {
 	@JoinColumn(name = "idItinerario")
 	private Itinerario itinerario; 
 
+
 }

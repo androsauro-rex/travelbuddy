@@ -1,5 +1,9 @@
 package com.travelbuddy.dto;
 
+import com.travelbuddy.listaenum.EnumStatus;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UtenteCreateDTO {
+public class UtenteReplaceDTO {
 	
 	@NotBlank(message = "Il nome è obbligatorio e non può essere vuoto")
 	private String nome;
@@ -34,5 +38,9 @@ public class UtenteCreateDTO {
 	@Size(min = 6, max = 20, message = "La password deve contenere almeno 6 caratteri e al massimo 20")
 	@NotBlank(message = "Password Obbligatoria")
 	private String password;
+	
+	
+	@Enumerated(EnumType.STRING)
+	private EnumStatus status; 
 	
 }
