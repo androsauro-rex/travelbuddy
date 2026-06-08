@@ -230,7 +230,7 @@ function saveTrip(status) {
   if (status === "DRAFT") {
     showToast("✅ Itinerario salvato come bozza", "success");
   } else {
-    showToast("🎉 Itinerario pubblicato!", "success");
+    showToast("Itinerario pubblicato!", "success");
   }
 }
 

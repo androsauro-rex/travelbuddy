@@ -64,7 +64,7 @@ function costruisciBodyCreazione(trip) {
       visibilita: traduciVisibilita(trip.visibility),
       dataInizioViaggio: trip.startDate,
       dataFineViaggio: trip.endDate,
-      budgetPianificato: Number(trip.budgetPianificato)
+      budgetPianificato: Number(trip.budgetPianificato),
     },
     destinazioneDTO: { nomeDestinazione: trip.destination },
     giornoDTO: (trip.days || []).map(traduciGiorno)
@@ -84,7 +84,6 @@ function costruisciBodyModifica(trip) {
     giornoDTO: (trip.days || []).map(traduciGiorno)
   };
 }
-
 
 //  CHIAMATA 1 — LOGIN  -> va al progetto AUTH (porta 8081)
 //  Avviene al click di "Accedi", manda email+password,
@@ -108,7 +107,7 @@ async function apiLogin(email, password) {
 //  Portano il token nell'header. TravelBuddy lo verifica
 //  da solo (stessa jwt.secret di AUTH) e ti autorizza.
 async function apiCreaItinerario(trip) {
-  const res = await fetch(APP_BASE + "/user/creazione/itinerario/completo", {
+  const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(costruisciBodyCreazione(trip))
