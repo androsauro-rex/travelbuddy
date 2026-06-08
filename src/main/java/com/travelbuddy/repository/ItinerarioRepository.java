@@ -36,8 +36,7 @@ public interface ItinerarioRepository extends JpaRepository<Itinerario, Long> {
 	@Query("SELECT i.visibilita FROM Itinerario i WHERE i.id = :id")
 	Optional<EnumVisibilita> findVisibilityById(@Param("id") Long id);
 	
-	//dato l'id dell'itinerario, trova la spesa corrispondente
-	Optional<Itinerario> findBySpesaId(Long idSpesa);
+	
 	
 	
 	

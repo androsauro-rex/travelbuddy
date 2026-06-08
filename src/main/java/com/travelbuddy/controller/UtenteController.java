@@ -74,7 +74,7 @@ public class UtenteController {
 		return ResponseEntity.ok(utenteService.updateUtenteById(utenteDTO, id)); 
 	}
 	
-	@PostMapping("/guest/registrazione")
+	@PostMapping("/public/registrazione")
 	public ResponseEntity<Utente> registrazioneUtente(@Valid @RequestBody UtenteCreateDTO utenteDTO){
 		return ResponseEntity.ok(
 	            utenteService.RegistrazioneNuovoUtente(utenteDTO)
