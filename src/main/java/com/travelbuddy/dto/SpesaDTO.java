@@ -1,9 +1,7 @@
 package com.travelbuddy.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.travelbuddy.listaenum.EnumTipologiaSpesa;
 
@@ -26,9 +24,9 @@ public class SpesaDTO {
 	@Enumerated(EnumType.STRING)
 	private EnumTipologiaSpesa tipologia; 
 	
-	@NotNull(message = "Data della spesa obbligatoria")
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate data; 
+//	@NotNull(message = "Data della spesa obbligatoria")
+//	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//	private LocalDate data; 
 	
 	@NotNull(message = "Il costo della spesa che vuoi inserire non può essere nullo")
 	@Digits(fraction = 2, integer = 8, message = "Il costo della spesa te inserito non ha un formato corretto")

@@ -55,7 +55,7 @@ public class SpesaServiceImpl implements SpesaService{
 		Spesa spesa = new Spesa(); 
 		spesa.setTipologia(spesaDTO.getTipologia());
 		spesa.setCosto(spesaDTO.getCosto());
-		spesa.setData(spesaDTO.getData());
+//		spesa.setData(spesaDTO.getData());
 		if(spesaDTO.getDescrizioneSpesa() != null) {
 			spesa.setDescrizioneSpesa(spesaDTO.getDescrizioneSpesa());
 		}
