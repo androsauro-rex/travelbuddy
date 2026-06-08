@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,22 +82,29 @@ public class UtenteController {
 	    );
 	}
 	
-	//quelli che mancano: 
-	// PATCH /api/utenti/{id}/disattiva 
-	// PATCH /api/utenti/{id}/riattiva 
-	// PATCH /api/utenti/{id}/ban
-	// DELETE api/utenti/{id}
+	@PatchMapping("/common/disattivazione/account/{id}")
+	public ResponseEntity<Void> disattivazioneAccount(@Min(1) @PathVariable Long id){
+		utenteService.disattivazioneAccountUtente(id);
+		return ResponseEntity.ok().build(); 
+	}
 	
+	@PatchMapping("/common/riattivazione/account/{id}")
+	public ResponseEntity<Void> riattivazioneAccount(@Min(1) @PathVariable Long id){
+		utenteService.riattivazioneAccountUtente(id); 
+		return ResponseEntity.ok().build(); 
+	}
 	
+	@PatchMapping("/admin/banAccount/{id}")
+	public ResponseEntity<Void> banAccount(@Min(1) @PathVariable Long id){
+		utenteService.banAccount(id); 
+		return ResponseEntity.ok().build(); 
+	}
 	
+	@DeleteMapping("/common/delete/account/{id}")
+	public ResponseEntity<Void> deleteAccount(@Min(1) @PathVariable Long id){
+		utenteService.deleteUtenteById(id); 
+		return ResponseEntity.ok().build(); 
+	}
 	
-	
-//	  .requestMatchers("/api/v1/public/**").permitAll()
-//    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // utile per CORS
-//    .requestMatchers("/api/v1/user/**").hasRole("USER")
-//    .requestMatchers("/api/v1/moderator/**").hasRole("MODERATOR")
-//    .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-//    .requestMatchers("/api/v1/common/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
-//    .requestMatchers("/api/v1/mod-content/**").hasAnyRole("MODERATOR", "ADMIN")
 	
 }
