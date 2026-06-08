@@ -48,7 +48,10 @@ public class ItinerarioController {
 				DTO.getDestinazioneDTO(), DTO.getGiornoDTO())); 
 	}
 	
-	//@PostMapping("/user/creazione/itinerario/con/giorni/e/tappe")
+//	@PostMapping("/user/creazione/itinerario/con/giorni/e/tappe")
+//	public ResponseEntity<Itinerario> creaItinerarioConGiorniTappe(@Valid @RequestBody ItinerarioDestinazioneGiornoTappaDTO DTO){
+//		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorniTappe(DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), DTO.getTappaDTO()));
+//	}
 	
 	
 	@PutMapping("/user/modifica/itinerario")

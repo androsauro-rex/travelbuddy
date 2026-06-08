@@ -4,7 +4,7 @@
 // ============================================================
 
 // DUE indirizzi base: uno per AUTH (login), uno per TravelBuddy (dati)
-const AUTH_BASE = "http://localhost:8081/api/v1";   // progetto AUTH (biglietteria)
+const AUTH_BASE = "http://localhost:8081/api/v1/auth";   // progetto AUTH (biglietteria)
 const APP_BASE  = "http://localhost:8080/api/v1";   // progetto TravelBuddy (dati)
 
 // ---------- GESTIONE TOKEN ----------
@@ -64,7 +64,7 @@ function costruisciBodyCreazione(trip) {
       visibilita: traduciVisibilita(trip.visibility),
       dataInizioViaggio: trip.startDate,
       dataFineViaggio: trip.endDate,
-      budgetPianificato: Number(trip.budgetPianificato)
+      budgetPianificato: Number(trip.budgetPianificato),
     },
     destinazioneDTO: { nomeDestinazione: trip.destination },
     giornoDTO: (trip.days || []).map(traduciGiorno)
@@ -85,13 +85,12 @@ function costruisciBodyModifica(trip) {
   };
 }
 
-// ============================================================
 //  CHIAMATA 1 — LOGIN  -> va al progetto AUTH (porta 8081)
 //  Avviene al click di "Accedi", manda email+password,
 //  riceve il token.
-// ============================================================
+
 async function apiLogin(email, password) {
-  const res = await fetch(AUTH_BASE + "/public/login", {
+  const res = await fetch(AUTH_BASE + "/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
@@ -103,13 +102,12 @@ async function apiLogin(email, password) {
   return res.json(); // { token, id, nickname, ruolo }
 }
 
-// ============================================================
+
 //  CHIAMATE 2 — DATI  -> vanno al progetto TravelBuddy (8080)
 //  Portano il token nell'header. TravelBuddy lo verifica
 //  da solo (stessa jwt.secret di AUTH) e ti autorizza.
-// ============================================================
 async function apiCreaItinerario(trip) {
-  const res = await fetch(APP_BASE + "/user/creazione/itinerario/completo", {
+  const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify(costruisciBodyCreazione(trip))
