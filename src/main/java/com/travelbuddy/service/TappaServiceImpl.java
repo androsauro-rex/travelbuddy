@@ -15,8 +15,8 @@ import com.travelbuddy.repository.TappaRepository;
 @Service
 public class TappaServiceImpl implements TappaService{
 	
-	public final TappaRepository tappaRepository; 
-	public final GiornoRepository giornoRepository; 
+	private final TappaRepository tappaRepository; 
+	private final GiornoRepository giornoRepository; 
 	
 	public TappaServiceImpl(TappaRepository tappaRepository, 
 			GiornoRepository giornoRepository) {
