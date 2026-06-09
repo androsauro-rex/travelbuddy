@@ -46,11 +46,10 @@ public class ItinerarioController {
 	// Ora il service salva anche le tappe (sono dentro ogni GiornoDTO).
 	@PostMapping("/user/creazione/itinerario/con/giorni")
 	public ResponseEntity<Itinerario> creaItinerarioConGiorni(
-			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO) {
-		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(
-				DTO.getItinerarioCreateDTO(),
-				DTO.getDestinazioneDTO(),
-				DTO.getGiornoDTO()));
+			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO,
+			@Min(1) @PathVariable Long idUtente) {
+		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(DTO.getItinerarioCreateDTO(), 
+				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), idUtente));
 	}
 
 	// MODIFICA: ho aggiunto /{idItinerario} nel path (prima mancava!)

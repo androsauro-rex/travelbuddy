@@ -6,7 +6,6 @@ import com.travelbuddy.dto.DestinazioneDTO;
 import com.travelbuddy.dto.GiornoDTO;
 import com.travelbuddy.dto.ItinerarioCreateDTO;
 import com.travelbuddy.dto.ItinerarioUpdateDTO;
-import com.travelbuddy.dto.TappaDTO;
 import com.travelbuddy.entity.Itinerario;
 
 public interface ItinerarioService {
@@ -19,12 +18,13 @@ public interface ItinerarioService {
 
 	Itinerario creaItinerarioConGiorni(ItinerarioCreateDTO itinerarioDTO,
 			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni);
+			List<GiornoDTO> listaGiorni, 
+			Long idUtente);
 
-	Itinerario creaItinerarioConGiorniTappe(ItinerarioCreateDTO itinerarioDTO,
-			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni,
-			List<TappaDTO> listaTappe);
+//	Itinerario creaItinerarioConGiorniTappe(ItinerarioCreateDTO itinerarioDTO,
+//			DestinazioneDTO destinazioneDTO,
+//			List<GiornoDTO> listaGiorni,
+//			List<TappaDTO> listaTappe);
 
 	// ATTENZIONE: ora riceve List<GiornoDTO> (non List<Giorno> entity)
 	Itinerario modificaItinerario(ItinerarioUpdateDTO itinerarioDTO, Long id,

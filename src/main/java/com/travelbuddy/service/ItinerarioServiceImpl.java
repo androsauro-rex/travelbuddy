@@ -15,12 +15,14 @@ import com.travelbuddy.entity.Destinazione;
 import com.travelbuddy.entity.Giorno;
 import com.travelbuddy.entity.Itinerario;
 import com.travelbuddy.entity.Tappa;
+import com.travelbuddy.entity.Utente;
 import com.travelbuddy.exception.BadRequestException;
 import com.travelbuddy.exception.NotFoundException;
 import com.travelbuddy.repository.DestinazioneRepository;
 import com.travelbuddy.repository.GiornoRepository;
 import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.TappaRepository;
+import com.travelbuddy.repository.UtenteRepository;
 
 @Service
 public class ItinerarioServiceImpl implements ItinerarioService {
@@ -30,18 +32,22 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	private final DestinazioneRepository destinazioneRepository;
 	private final GiornoRepository giornoRepository;
 	private final TappaRepository tappaRepository;
-	
+
+	private final UtenteRepository utenteRepository; 
+
 
 	public ItinerarioServiceImpl(ItinerarioRepository itinerarioRepository,
 			DestinazioneRepository destinazioneRepository,
 			GiornoRepository giornoRepository,
-			TappaRepository tappaRepository) {
+			TappaRepository tappaRepository, 
+			UtenteRepository utenteRepository) {
 		this.itinerarioRepository = itinerarioRepository;
 		this.destinazioneRepository = destinazioneRepository;
 		this.giornoRepository = giornoRepository;
 		this.tappaRepository = tappaRepository;
-		
-	}
+		this.utenteRepository = utenteRepository;
+		}
+
 
 	@Override
 	public List<Itinerario> findAllItinerari() {
@@ -97,7 +103,8 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	@Transactional   // <-- AGGIUNTO: o tutto si salva, o niente (no dati a metà)
 	public Itinerario creaItinerarioConGiorni(ItinerarioCreateDTO itinerarioDTO,
 			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni) {
+			List<GiornoDTO> listaGiorni, 
+			Long idUtente) {
 		if (itinerarioDTO == null) {
 			throw new IllegalArgumentException("Itinerario nullo");
 		}
@@ -106,6 +113,9 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		}
 		if (listaGiorni == null) {
 			throw new IllegalArgumentException("giorno nullo");
+		}
+		if(idUtente == null) {
+			throw new IllegalArgumentException("idUtente nullo");
 		}
 
 		Itinerario nuovoItinerario = new Itinerario();
@@ -121,8 +131,16 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		// like a 0 di partenza (evita problemi se la colonna è not null)
 		nuovoItinerario.setLikes(0);
 		
+
 //		Optional<Utente> utente = utenteRepository.findById();
 //		nuovoItinerario.setUtente();
+
+		Optional<Utente> optUtente = utenteRepository.findById(idUtente); 
+		Utente utenteEsistente = optUtente.orElseThrow(() -> new NotFoundException("Utente "
+				+ "con id " + idUtente + " non trovato"));
+		
+		nuovoItinerario.setUtente(utenteEsistente);
+
 
 		itinerarioRepository.save(nuovoItinerario);
 
@@ -154,60 +172,60 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		return nuovoItinerario;
 	}
 
-	@Override
-	@Transactional
-	public Itinerario creaItinerarioConGiorniTappe(ItinerarioCreateDTO itinerarioDTO,
-			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni,
-			List<TappaDTO> listaTappe) {
-
-		if (itinerarioDTO == null) {
-			throw new IllegalArgumentException("Itinerario nullo");
-		}
-		if (destinazioneDTO == null) {
-			throw new IllegalArgumentException("destinazione nullo");
-		}
-		if (listaGiorni == null) {
-			throw new IllegalArgumentException("lista dei giorni nulla");
-		}
-
-		Itinerario nuovoItinerario = new Itinerario();
-		nuovoItinerario.setTitoloViaggio(itinerarioDTO.getTitoloViaggio());
-		nuovoItinerario.setVisibilita(itinerarioDTO.getVisibilita());
-		if (itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
-			throw new BadRequestException("La data di fine viaggio non può essere antecedente la data di inizio viaggio");
-		}
-		nuovoItinerario.setDataInizioViaggio(itinerarioDTO.getDataInizioViaggio());
-		nuovoItinerario.setDataFineViaggio(itinerarioDTO.getDataFineViaggio());
-		nuovoItinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
-		nuovoItinerario.setLikes(0);
-
-		itinerarioRepository.save(nuovoItinerario);
-
-		Destinazione nuovaDestinazione = new Destinazione();
-		nuovaDestinazione.setNomeDestinazione(destinazioneDTO.getNomeDestinazione());
-		nuovaDestinazione.setItinerario(nuovoItinerario);
-		destinazioneRepository.save(nuovaDestinazione);
-
-		for (GiornoDTO gDto : listaGiorni) {
-			Giorno giorno = new Giorno();
-			giorno.setDescrizioneAttivitaGiorno(gDto.getDescrizioneAttivitaGiorno());
-			giorno.setData(gDto.getData());
-			giorno.setItinerario(nuovoItinerario);
-			giornoRepository.save(giorno);
-
-			if (gDto.getTappe() != null) {
-				for (TappaDTO tDto : gDto.getTappe()) {
-					Tappa tappa = new Tappa();
-					tappa.setNomeTappa(tDto.getNomeTappa());
-					tappa.setDescrizioneTappa(tDto.getDescrizioneTappa());
-					tappa.setGiorno(giorno);
-					tappaRepository.save(tappa);
-				}
-			}
-		}
-		return nuovoItinerario;
-	}
+//	@Override
+//	@Transactional
+//	public Itinerario creaItinerarioConGiorniTappe(ItinerarioCreateDTO itinerarioDTO,
+//			DestinazioneDTO destinazioneDTO,
+//			List<GiornoDTO> listaGiorni,
+//			List<TappaDTO> listaTappe) {
+//
+//		if (itinerarioDTO == null) {
+//			throw new IllegalArgumentException("Itinerario nullo");
+//		}
+//		if (destinazioneDTO == null) {
+//			throw new IllegalArgumentException("destinazione nullo");
+//		}
+//		if (listaGiorni == null) {
+//			throw new IllegalArgumentException("lista dei giorni nulla");
+//		}
+//
+//		Itinerario nuovoItinerario = new Itinerario();
+//		nuovoItinerario.setTitoloViaggio(itinerarioDTO.getTitoloViaggio());
+//		nuovoItinerario.setVisibilita(itinerarioDTO.getVisibilita());
+//		if (itinerarioDTO.getDataInizioViaggio().isAfter(itinerarioDTO.getDataFineViaggio())) {
+//			throw new BadRequestException("La data di fine viaggio non può essere antecedente la data di inizio viaggio");
+//		}
+//		nuovoItinerario.setDataInizioViaggio(itinerarioDTO.getDataInizioViaggio());
+//		nuovoItinerario.setDataFineViaggio(itinerarioDTO.getDataFineViaggio());
+//		nuovoItinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
+//		nuovoItinerario.setLikes(0);
+//
+//		itinerarioRepository.save(nuovoItinerario);
+//
+//		Destinazione nuovaDestinazione = new Destinazione();
+//		nuovaDestinazione.setNomeDestinazione(destinazioneDTO.getNomeDestinazione());
+//		nuovaDestinazione.setItinerario(nuovoItinerario);
+//		destinazioneRepository.save(nuovaDestinazione);
+//
+//		for (GiornoDTO gDto : listaGiorni) {
+//			Giorno giorno = new Giorno();
+//			giorno.setDescrizioneAttivitaGiorno(gDto.getDescrizioneAttivitaGiorno());
+//			giorno.setData(gDto.getData());
+//			giorno.setItinerario(nuovoItinerario);
+//			giornoRepository.save(giorno);
+//
+//			if (gDto.getTappe() != null) {
+//				for (TappaDTO tDto : gDto.getTappe()) {
+//					Tappa tappa = new Tappa();
+//					tappa.setNomeTappa(tDto.getNomeTappa());
+//					tappa.setDescrizioneTappa(tDto.getDescrizioneTappa());
+//					tappa.setGiorno(giorno);
+//					tappaRepository.save(tappa);
+//				}
+//			}
+//		}
+//		return nuovoItinerario;
+//	}
 
 	// ============================================================
 	//  MODIFICA con strategia "fotografia": cancella i vecchi
