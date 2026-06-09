@@ -223,7 +223,7 @@ async function saveTrip(status) {
       await apiModificaItinerario(currentTrip.backendId, currentTrip);
     } else {
       const creato = await apiCreaItinerario(currentTrip);
-      currentTrip.backendId = creato.id;
+      if (creato && creato.id) currentTrip.backendId = creato.id;
     }
 
     // salvataggio locale (per ricaricare la pagina)

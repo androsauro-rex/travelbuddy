@@ -1,5 +1,6 @@
 package com.travelbuddy.controller;
 
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,46 +35,49 @@ public class ItinerarioController {
 		this.itinerarioService = itinerarioService;
 	}
 
+	// ===== metodo di comodo: legge l'id utente dal token (dai details) =====
+	private Long getAuthUserId() {
+		UsernamePasswordAuthenticationToken authentication =
+				(UsernamePasswordAuthenticationToken)
+				SecurityContextHolder.getContext().getAuthentication();
+		return (Long) authentication.getDetails();
+	}
+
 	@GetMapping("/common/itinerari/{id}")
 	public ResponseEntity<Itinerario> getItinerario(@Min(1) @PathVariable Long id) {
 		return ResponseEntity.ok(itinerarioService.findItinerarioById(id));
 	}
 
 	@PostMapping("/user/creazione/itinerario")
-	public ResponseEntity<Itinerario> creaItinerario(@Valid @RequestBody ItinerarioDestinazioneDTO DTO)
-	{
-		UsernamePasswordAuthenticationToken authentication =
-				(UsernamePasswordAuthenticationToken)
-				SecurityContextHolder.getContext().getAuthentication();
+	public ResponseEntity<Map<String, Object>> creaItinerario(
+			@Valid @RequestBody ItinerarioDestinazioneDTO DTO) {
 
-				Long authUserId = (Long) authentication.getDetails();
-				
-				System.err.println(authUserId);
-				
-				
-				
-		return ResponseEntity.ok(itinerarioService.creaItinerario(
-				DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO(), authUserId));
+		Long authUserId = getAuthUserId();
+
+		Itinerario creato = itinerarioService.creaItinerario(
+				DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO(), authUserId);
+
+		// ===== restituisco solo l'id, in JSON semplice e sicuro =====
+		return ResponseEntity.ok(Map.of("id", creato.getId()));
 	}
 
-	// QUESTO è l'endpoint che chiami dal frontend.
-	// Ora il service salva anche le tappe (sono dentro ogni GiornoDTO).
+	// QUESTO e' l'endpoint che chiami dal frontend.
 	@PostMapping("/user/creazione/itinerario/con/giorni")
-	public ResponseEntity<Itinerario> creaItinerarioConGiorni(
+	public ResponseEntity<Map<String, Object>> creaItinerarioConGiorni(
 			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO) {
-		UsernamePasswordAuthenticationToken authentication =
-				(UsernamePasswordAuthenticationToken)
-				SecurityContextHolder.getContext().getAuthentication();
 
-				Long authUserId = (Long) authentication.getDetails();
-				 
-				System.err.println(authUserId);
-		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(DTO.getItinerarioCreateDTO(), 
-				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), authUserId));
-		
+		Long authUserId = getAuthUserId();
+
+		Itinerario creato = itinerarioService.creaItinerarioConGiorni(
+				DTO.getItinerarioCreateDTO(),
+				DTO.getDestinazioneDTO(),
+				DTO.getGiornoDTO(),
+				authUserId);
+
+		// ===== restituisco solo l'id, in JSON semplice e sicuro =====
+		return ResponseEntity.ok(Map.of("id", creato.getId()));
 	}
 
-	// MODIFICA: ho aggiunto /{idItinerario} nel path (prima mancava!)
 	@PutMapping("/user/modifica/itinerario/{idItinerario}")
 	public ResponseEntity<Void> modificaItinerario(
 			@Valid @RequestBody ModificaItinerarioDTO DTO,
@@ -82,11 +86,9 @@ public class ItinerarioController {
 		return ResponseEntity.noContent().build();
 	}
 
-	// CANCELLAZIONE
 	@DeleteMapping("/user/itinerario/{idItinerario}")
 	public ResponseEntity<Void> eliminaItinerario(@Min(1) @PathVariable Long idItinerario) {
 		itinerarioService.deleteItinerarioById(idItinerario);
 		return ResponseEntity.noContent().build();
 	}
-
 }

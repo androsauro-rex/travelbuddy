@@ -106,6 +106,17 @@ async function apiLogin(email, password) {
 //  CHIAMATE 2 — DATI  -> vanno al progetto TravelBuddy (8080)
 //  Portano il token nell'header. TravelBuddy lo verifica
 //  da solo (stessa jwt.secret di AUTH) e ti autorizza.
+
+//async function apiCreaItinerario(trip) {
+//  const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
+//    method: "POST",
+//    headers: authHeaders(),
+//    body: JSON.stringify(costruisciBodyCreazione(trip))
+//  });
+//  if (!res.ok) throw new Error(await res.text() || "Creazione fallita");
+//  return res.json();
+//}
+
 async function apiCreaItinerario(trip) {
   const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
     method: "POST",
@@ -113,7 +124,10 @@ async function apiCreaItinerario(trip) {
     body: JSON.stringify(costruisciBodyCreazione(trip))
   });
   if (!res.ok) throw new Error(await res.text() || "Creazione fallita");
-  return res.json();
+
+  // se il backend non restituisce JSON (corpo vuoto), non esplodere!
+  const testo = await res.text();
+  return testo ? JSON.parse(testo) : {};
 }
 
 async function apiModificaItinerario(idItinerario, trip) {
