@@ -14,12 +14,11 @@ public interface ItinerarioService {
 	Itinerario findItinerarioById(Long id);
 
 	Itinerario creaItinerario(ItinerarioCreateDTO itinerarioDTO,
-			DestinazioneDTO destinazioneDTO);
+			DestinazioneDTO destinazioneDTO, Long authUserId);
 
 	Itinerario creaItinerarioConGiorni(ItinerarioCreateDTO itinerarioDTO,
 			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni, 
-			Long idUtente);
+			List<GiornoDTO> listaGiorni, Long authUserId);
 
 //	Itinerario creaItinerarioConGiorniTappe(ItinerarioCreateDTO itinerarioDTO,
 //			DestinazioneDTO destinazioneDTO,
