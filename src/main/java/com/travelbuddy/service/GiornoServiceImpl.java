@@ -11,7 +11,8 @@ import com.travelbuddy.repository.GiornoRepository;
 @Service
 public class GiornoServiceImpl implements GiornoService{
 	
-	public GiornoRepository giornoRepository; 
+	private final GiornoRepository giornoRepository; 
+	
 	public GiornoServiceImpl(GiornoRepository giornoRepository) {
 		this.giornoRepository = giornoRepository; 
 	}

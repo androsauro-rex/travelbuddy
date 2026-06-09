@@ -15,8 +15,8 @@ import com.travelbuddy.repository.SpesaRepository;
 @Service
 public class SpesaServiceImpl implements SpesaService{
 	
-	public final SpesaRepository spesaRepository; 
-	public final ItinerarioRepository itinerarioRepository; 
+	private final SpesaRepository spesaRepository; 
+	private final ItinerarioRepository itinerarioRepository; 
 	
 	public SpesaServiceImpl(SpesaRepository spesaRepository, 
 			ItinerarioRepository itinerarioRepository) {
