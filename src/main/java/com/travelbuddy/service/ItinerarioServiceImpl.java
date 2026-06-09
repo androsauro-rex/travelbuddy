@@ -21,7 +21,6 @@ import com.travelbuddy.repository.DestinazioneRepository;
 import com.travelbuddy.repository.GiornoRepository;
 import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.TappaRepository;
-import com.travelbuddy.repository.UtenteRepository;
 
 @Service
 public class ItinerarioServiceImpl implements ItinerarioService {
@@ -31,18 +30,17 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	private final DestinazioneRepository destinazioneRepository;
 	private final GiornoRepository giornoRepository;
 	private final TappaRepository tappaRepository;
-	private final UtenteRepository utenteRepository;
+	
 
 	public ItinerarioServiceImpl(ItinerarioRepository itinerarioRepository,
 			DestinazioneRepository destinazioneRepository,
 			GiornoRepository giornoRepository,
-			TappaRepository tappaRepository,
-			UtenteRepository utenteRepository) {
+			TappaRepository tappaRepository) {
 		this.itinerarioRepository = itinerarioRepository;
 		this.destinazioneRepository = destinazioneRepository;
 		this.giornoRepository = giornoRepository;
 		this.tappaRepository = tappaRepository;
-		this.utenteRepository = utenteRepository;
+		
 	}
 
 	@Override
