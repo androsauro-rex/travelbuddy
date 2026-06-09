@@ -1,16 +1,10 @@
-// ============================================================
-//  api.js  —  Versione a DUE PROGETTI (AUTH separato)
-//  Include questo file PRIMA di login.js e dashboard.js
-// ============================================================
 
-// DUE indirizzi base: uno per AUTH (login), uno per TravelBuddy (dati)
 const AUTH_BASE = "http://localhost:8081/api/v1/auth";   // progetto AUTH (biglietteria)
-const APP_BASE  = "http://localhost:8080/api/v1";   // progetto TravelBuddy (dati)
+const APP_BASE  = "http://localhost:8080/api/v1";        // progetto TravelBuddy (dati)
 
 // ---------- GESTIONE TOKEN ----------
 
 function salvaAuth(loginResponse) {
-  // loginResponse = { token, id, nickname, ruolo }  (adatta ai campi che AUTH ti restituisce)
   localStorage.setItem("authToken", loginResponse.token);
   localStorage.setItem("userId", loginResponse.id);
   localStorage.setItem("nickname", loginResponse.nickname || "");
@@ -32,12 +26,22 @@ function logoutPulisci() {
   localStorage.removeItem("ruolo");
 }
 
-// Header con il token, per le chiamate protette verso TravelBuddy
 function authHeaders() {
   const token = getToken();
   const headers = { "Content-Type": "application/json" };
   if (token) headers["Authorization"] = "Bearer " + token;
   return headers;
+}
+
+
+async function leggiRispostaSicura(res) {
+  const testo = await res.text();
+  if (!testo) return {};
+  try {
+    return JSON.parse(testo);
+  } catch (e) {
+    return {};
+  }
 }
 
 // ---------- TRADUTTORE FRONTEND -> BACKEND ----------
@@ -85,10 +89,7 @@ function costruisciBodyModifica(trip) {
   };
 }
 
-//  CHIAMATA 1 — LOGIN  -> va al progetto AUTH (porta 8081)
-//  Avviene al click di "Accedi", manda email+password,
-//  riceve il token.
-
+//  CHIAMATA 1 — LOGIN  -> progetto AUTH (porta 8081)
 async function apiLogin(email, password) {
   const res = await fetch(AUTH_BASE + "/login", {
     method: "POST",
@@ -99,23 +100,10 @@ async function apiLogin(email, password) {
     const msg = await res.text();
     throw new Error(msg || "Login fallito");
   }
-  return res.json(); // { token, id, nickname, ruolo }
+  return res.json(); // il login restituisce sempre { token, ... }
 }
 
-
-//  CHIAMATE 2 — DATI  -> vanno al progetto TravelBuddy (8080)
-//  Portano il token nell'header. TravelBuddy lo verifica
-//  da solo (stessa jwt.secret di AUTH) e ti autorizza.
-
-//async function apiCreaItinerario(trip) {
-//  const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
-//    method: "POST",
-//    headers: authHeaders(),
-//    body: JSON.stringify(costruisciBodyCreazione(trip))
-//  });
-//  if (!res.ok) throw new Error(await res.text() || "Creazione fallita");
-//  return res.json();
-//}
+//  CHIAMATE 2 — DATI  -> progetto TravelBuddy (8080)
 
 async function apiCreaItinerario(trip) {
   const res = await fetch(APP_BASE + "/user/creazione/itinerario/con/giorni", {
@@ -124,10 +112,7 @@ async function apiCreaItinerario(trip) {
     body: JSON.stringify(costruisciBodyCreazione(trip))
   });
   if (!res.ok) throw new Error(await res.text() || "Creazione fallita");
-
-  // se il backend non restituisce JSON (corpo vuoto), non esplodere!
-  const testo = await res.text();
-  return testo ? JSON.parse(testo) : {};
+  return leggiRispostaSicura(res);   // tollera risposta vuota
 }
 
 async function apiModificaItinerario(idItinerario, trip) {
@@ -137,7 +122,7 @@ async function apiModificaItinerario(idItinerario, trip) {
     body: JSON.stringify(costruisciBodyModifica(trip))
   });
   if (!res.ok) throw new Error(await res.text() || "Modifica fallita");
-  return res.json();
+  return leggiRispostaSicura(res);   // 204 No Content: nessun JSON, non esplode
 }
 
 async function apiEliminaItinerario(idItinerario) {
@@ -153,7 +138,6 @@ async function apiEliminaItinerario(idItinerario) {
 //  SPESE  —  collegamento al backend TravelBuddy
 // ============================================================
 
-// Traduce la tipologia dal frontend all'enum Java EnumTipologiaSpesa
 function traduciTipologiaSpesa(tipoFrontend) {
   const mappa = {
     "Trasporti": "TRASPORTO",
@@ -166,18 +150,14 @@ function traduciTipologiaSpesa(tipoFrontend) {
   return mappa[tipoFrontend] || "ALTRO";
 }
 
-// Costruisce il corpo di UNA spesa per il backend (SpesaDTO)
-// Frontend: { nome, tipologia, costo }  ->  Backend: { tipologia, costo, descrizioneSpesa }
 function costruisciBodySpesa(spesa) {
   return {
     tipologia: traduciTipologiaSpesa(spesa.tipologia),
     costo: Number(spesa.costo),
-    descrizioneSpesa: spesa.nome   // il "nome" del frontend diventa descrizioneSpesa
-    // niente data: la mette il backend
+    descrizioneSpesa: spesa.nome
   };
 }
 
-// AGGIUNGE una spesa a un itinerario (ritorna la spesa creata, con id del DB)
 async function apiAggiungiSpesa(idItinerario, spesa) {
   const res = await fetch(APP_BASE + "/user/itinerario/" + idItinerario + "/spesa", {
     method: "POST",
@@ -185,20 +165,18 @@ async function apiAggiungiSpesa(idItinerario, spesa) {
     body: JSON.stringify(costruisciBodySpesa(spesa))
   });
   if (!res.ok) throw new Error(await res.text() || "Aggiunta spesa fallita");
-  return res.json();
+  return leggiRispostaSicura(res);
 }
 
-// ELENCA le spese di un itinerario
 async function apiGetSpese(idItinerario) {
   const res = await fetch(APP_BASE + "/common/itinerario/" + idItinerario + "/spese", {
     method: "GET",
     headers: authHeaders()
   });
   if (!res.ok) throw new Error(await res.text() || "Lettura spese fallita");
-  return res.json();
+  return leggiRispostaSicura(res);
 }
 
-// ELIMINA una spesa dal DB
 async function apiEliminaSpesa(idSpesa) {
   const res = await fetch(APP_BASE + "/user/spesa/" + idSpesa, {
     method: "DELETE",
