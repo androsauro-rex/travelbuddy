@@ -1,6 +1,9 @@
 package com.travelbuddy.controller;
 
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,19 +40,37 @@ public class ItinerarioController {
 	}
 
 	@PostMapping("/user/creazione/itinerario")
-	public ResponseEntity<Itinerario> creaItinerario(@Valid @RequestBody ItinerarioDestinazioneDTO DTO) {
+	public ResponseEntity<Itinerario> creaItinerario(@Valid @RequestBody ItinerarioDestinazioneDTO DTO)
+	{
+		UsernamePasswordAuthenticationToken authentication =
+				(UsernamePasswordAuthenticationToken)
+				SecurityContextHolder.getContext().getAuthentication();
+
+				Long authUserId = (Long) authentication.getDetails();
+				
+				System.err.println(authUserId);
+				
+				
+				
 		return ResponseEntity.ok(itinerarioService.creaItinerario(
-				DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO()));
+				DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO(), authUserId));
 	}
 
 	// QUESTO è l'endpoint che chiami dal frontend.
 	// Ora il service salva anche le tappe (sono dentro ogni GiornoDTO).
 	@PostMapping("/user/creazione/itinerario/con/giorni")
 	public ResponseEntity<Itinerario> creaItinerarioConGiorni(
-			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO,
-			@Min(1) @PathVariable Long idUtente) {
+			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO) {
+		UsernamePasswordAuthenticationToken authentication =
+				(UsernamePasswordAuthenticationToken)
+				SecurityContextHolder.getContext().getAuthentication();
+
+				Long authUserId = (Long) authentication.getDetails();
+				
+				System.err.println(authUserId);
 		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(DTO.getItinerarioCreateDTO(), 
-				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), idUtente));
+				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), authUserId));
+		
 	}
 
 	// MODIFICA: ho aggiunto /{idItinerario} nel path (prima mancava!)

@@ -24,6 +24,7 @@ import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.TappaRepository;
 import com.travelbuddy.repository.UtenteRepository;
 
+
 @Service
 public class ItinerarioServiceImpl implements ItinerarioService {
 	
@@ -32,20 +33,23 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	private final DestinazioneRepository destinazioneRepository;
 	private final GiornoRepository giornoRepository;
 	private final TappaRepository tappaRepository;
+	private final UtenteRepository utenteRepository;
 
-	private final UtenteRepository utenteRepository; 
+
+//	private final UtenteRepository utenteRepository; 
 
 
 	public ItinerarioServiceImpl(ItinerarioRepository itinerarioRepository,
 			DestinazioneRepository destinazioneRepository,
 			GiornoRepository giornoRepository,
-			TappaRepository tappaRepository, 
+			TappaRepository tappaRepository,
 			UtenteRepository utenteRepository) {
 		this.itinerarioRepository = itinerarioRepository;
 		this.destinazioneRepository = destinazioneRepository;
 		this.giornoRepository = giornoRepository;
 		this.tappaRepository = tappaRepository;
 		this.utenteRepository = utenteRepository;
+	
 		}
 
 
@@ -66,7 +70,7 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	@Override
 	@Transactional
 	public Itinerario creaItinerario(ItinerarioCreateDTO itinerarioDTO,
-			DestinazioneDTO destinazioneDTO) {
+			DestinazioneDTO destinazioneDTO, Long authUserId) {
 		if (itinerarioDTO == null) {
 			throw new IllegalArgumentException("Itinerario nullo");
 		}
@@ -83,8 +87,15 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		nuovoItinerario.setDataInizioViaggio(itinerarioDTO.getDataInizioViaggio());
 		nuovoItinerario.setDataFineViaggio(itinerarioDTO.getDataFineViaggio());
 		nuovoItinerario.setBudgetPianificato(itinerarioDTO.getBudgetPianificato());
-
+		
+		Optional<Utente> optUtente = utenteRepository.findById(authUserId); 
+		Utente utenteEsistente = optUtente.orElseThrow(() -> new NotFoundException("Utente "
+				+ "con id " + authUserId + " non trovato"));
+		
+		nuovoItinerario.setUtente(utenteEsistente);
+		
 		itinerarioRepository.save(nuovoItinerario);
+		
 
 		Destinazione nuovaDestinazione = new Destinazione();
 		nuovaDestinazione.setNomeDestinazione(destinazioneDTO.getNomeDestinazione());
@@ -103,8 +114,7 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 	@Transactional   // <-- AGGIUNTO: o tutto si salva, o niente (no dati a metà)
 	public Itinerario creaItinerarioConGiorni(ItinerarioCreateDTO itinerarioDTO,
 			DestinazioneDTO destinazioneDTO,
-			List<GiornoDTO> listaGiorni, 
-			Long idUtente) {
+			List<GiornoDTO> listaGiorni, Long authUserId) {
 		if (itinerarioDTO == null) {
 			throw new IllegalArgumentException("Itinerario nullo");
 		}
@@ -114,9 +124,7 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		if (listaGiorni == null) {
 			throw new IllegalArgumentException("giorno nullo");
 		}
-		if(idUtente == null) {
-			throw new IllegalArgumentException("idUtente nullo");
-		}
+		
 
 		Itinerario nuovoItinerario = new Itinerario();
 		nuovoItinerario.setTitoloViaggio(itinerarioDTO.getTitoloViaggio());
@@ -131,15 +139,18 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		// like a 0 di partenza (evita problemi se la colonna è not null)
 		nuovoItinerario.setLikes(0);
 		
-
-//		Optional<Utente> utente = utenteRepository.findById();
-//		nuovoItinerario.setUtente();
-
-		Optional<Utente> optUtente = utenteRepository.findById(idUtente); 
+		
+		Optional<Utente> optUtente = utenteRepository.findById(authUserId); 
 		Utente utenteEsistente = optUtente.orElseThrow(() -> new NotFoundException("Utente "
-				+ "con id " + idUtente + " non trovato"));
+				+ "con id " + authUserId + " non trovato"));
 		
 		nuovoItinerario.setUtente(utenteEsistente);
+		
+		itinerarioRepository.save(nuovoItinerario);
+		
+		
+		
+
 
 
 		itinerarioRepository.save(nuovoItinerario);
