@@ -21,23 +21,28 @@ import com.travelbuddy.repository.DestinazioneRepository;
 import com.travelbuddy.repository.GiornoRepository;
 import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.TappaRepository;
+import com.travelbuddy.repository.UtenteRepository;
 
 @Service
 public class ItinerarioServiceImpl implements ItinerarioService {
-
+	
+	
 	private final ItinerarioRepository itinerarioRepository;
 	private final DestinazioneRepository destinazioneRepository;
 	private final GiornoRepository giornoRepository;
 	private final TappaRepository tappaRepository;
+	private final UtenteRepository utenteRepository;
 
 	public ItinerarioServiceImpl(ItinerarioRepository itinerarioRepository,
 			DestinazioneRepository destinazioneRepository,
 			GiornoRepository giornoRepository,
-			TappaRepository tappaRepository) {
+			TappaRepository tappaRepository,
+			UtenteRepository utenteRepository) {
 		this.itinerarioRepository = itinerarioRepository;
 		this.destinazioneRepository = destinazioneRepository;
 		this.giornoRepository = giornoRepository;
 		this.tappaRepository = tappaRepository;
+		this.utenteRepository = utenteRepository;
 	}
 
 	@Override
@@ -117,6 +122,9 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 
 		// like a 0 di partenza (evita problemi se la colonna è not null)
 		nuovoItinerario.setLikes(0);
+		
+//		Optional<Utente> utente = utenteRepository.findById();
+//		nuovoItinerario.setUtente();
 
 		itinerarioRepository.save(nuovoItinerario);
 
