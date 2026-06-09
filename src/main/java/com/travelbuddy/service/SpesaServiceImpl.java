@@ -3,6 +3,7 @@ package com.travelbuddy.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.travelbuddy.dto.SpesaDTO;
@@ -11,7 +12,7 @@ import com.travelbuddy.entity.Spesa;
 import com.travelbuddy.exception.NotFoundException;
 import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.SpesaRepository;
-
+@Service
 public class SpesaServiceImpl implements SpesaService{
 	
 	public final SpesaRepository spesaRepository; 
