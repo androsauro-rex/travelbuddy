@@ -66,7 +66,7 @@ public class ItinerarioController {
 				SecurityContextHolder.getContext().getAuthentication();
 
 				Long authUserId = (Long) authentication.getDetails();
-				
+				 
 				System.err.println(authUserId);
 		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(DTO.getItinerarioCreateDTO(), 
 				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), authUserId));
