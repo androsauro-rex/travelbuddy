@@ -3,6 +3,7 @@ package com.travelbuddy.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.travelbuddy.dto.TappaDTO;
@@ -11,11 +12,11 @@ import com.travelbuddy.entity.Tappa;
 import com.travelbuddy.exception.NotFoundException;
 import com.travelbuddy.repository.GiornoRepository;
 import com.travelbuddy.repository.TappaRepository;
-
+@Service
 public class TappaServiceImpl implements TappaService{
 	
-	public final TappaRepository tappaRepository; 
-	public final GiornoRepository giornoRepository; 
+	private final TappaRepository tappaRepository; 
+	private final GiornoRepository giornoRepository; 
 	
 	public TappaServiceImpl(TappaRepository tappaRepository, 
 			GiornoRepository giornoRepository) {

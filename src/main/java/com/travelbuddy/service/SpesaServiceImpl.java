@@ -3,6 +3,7 @@ package com.travelbuddy.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.travelbuddy.dto.SpesaDTO;
@@ -11,11 +12,11 @@ import com.travelbuddy.entity.Spesa;
 import com.travelbuddy.exception.NotFoundException;
 import com.travelbuddy.repository.ItinerarioRepository;
 import com.travelbuddy.repository.SpesaRepository;
-
+@Service
 public class SpesaServiceImpl implements SpesaService{
 	
-	public final SpesaRepository spesaRepository; 
-	public final ItinerarioRepository itinerarioRepository; 
+	private final SpesaRepository spesaRepository; 
+	private final ItinerarioRepository itinerarioRepository; 
 	
 	public SpesaServiceImpl(SpesaRepository spesaRepository, 
 			ItinerarioRepository itinerarioRepository) {
@@ -55,7 +56,7 @@ public class SpesaServiceImpl implements SpesaService{
 		Spesa spesa = new Spesa(); 
 		spesa.setTipologia(spesaDTO.getTipologia());
 		spesa.setCosto(spesaDTO.getCosto());
-		spesa.setData(spesaDTO.getData());
+//		spesa.setData(spesaDTO.getData());
 		if(spesaDTO.getDescrizioneSpesa() != null) {
 			spesa.setDescrizioneSpesa(spesaDTO.getDescrizioneSpesa());
 		}

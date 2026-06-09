@@ -14,9 +14,11 @@ public class JwtService {
 	@Value("${jwt.secret}")
     private String secret;
     
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
+	private Key getSigningKey() {
+	    System.out.println(">>> TB - secret usata (lunghezza " + secret.length() + "): " + secret);
+	    return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+	}
+	
     // METODO INTERNO
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
@@ -57,6 +59,7 @@ public class JwtService {
             extractAllClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println(">>> TB - token NON valido, motivo: " + e.getMessage());
             return false;
         }
     }

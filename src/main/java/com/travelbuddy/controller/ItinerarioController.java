@@ -1,7 +1,11 @@
 package com.travelbuddy.controller;
 
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,39 +27,66 @@ import jakarta.validation.constraints.Min;
 @Validated
 @RequestMapping("/api/v1")
 public class ItinerarioController {
-	
-	private final ItinerarioService itinerarioService;  
-	//per il polimorfismo 
-	//definisco il tipo, implementazione del sottotipo
+
+	private final ItinerarioService itinerarioService;
+
 	public ItinerarioController(ItinerarioService itinerarioService) {
-		this.itinerarioService = itinerarioService;  
+		this.itinerarioService = itinerarioService;
 	}
-	
+
 	@GetMapping("/common/itinerari/{id}")
-	public ResponseEntity<Itinerario> getAllItinerari(@Min(1) @PathVariable Long id){
-		return ResponseEntity.ok(itinerarioService.findItinerarioById(id)); 
+	public ResponseEntity<Itinerario> getItinerario(@Min(1) @PathVariable Long id) {
+		return ResponseEntity.ok(itinerarioService.findItinerarioById(id));
 	}
-	
+
 	@PostMapping("/user/creazione/itinerario")
-	public ResponseEntity<Itinerario> creaItinerario(@Valid @RequestBody ItinerarioDestinazioneDTO DTO){
-		return ResponseEntity.ok(itinerarioService.creaItinerario(DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO()));
+	public ResponseEntity<Itinerario> creaItinerario(@Valid @RequestBody ItinerarioDestinazioneDTO DTO)
+	{
+		UsernamePasswordAuthenticationToken authentication =
+				(UsernamePasswordAuthenticationToken)
+				SecurityContextHolder.getContext().getAuthentication();
+
+				Long authUserId = (Long) authentication.getDetails();
+				
+				System.err.println(authUserId);
+				
+				
+				
+		return ResponseEntity.ok(itinerarioService.creaItinerario(
+				DTO.getItinerarioCreateDTO(), DTO.getDestinazioneDTO(), authUserId));
 	}
-	
+
+	// QUESTO è l'endpoint che chiami dal frontend.
+	// Ora il service salva anche le tappe (sono dentro ogni GiornoDTO).
 	@PostMapping("/user/creazione/itinerario/con/giorni")
-	public ResponseEntity<Itinerario> creaItinerarioConGiorni(@Valid @RequestBody 
-			ItinerarioDestinazioneGiornoDTO DTO){
+	public ResponseEntity<Itinerario> creaItinerarioConGiorni(
+			@Valid @RequestBody ItinerarioDestinazioneGiornoDTO DTO) {
+		UsernamePasswordAuthenticationToken authentication =
+				(UsernamePasswordAuthenticationToken)
+				SecurityContextHolder.getContext().getAuthentication();
+
+				Long authUserId = (Long) authentication.getDetails();
+				 
+				System.err.println(authUserId);
 		return ResponseEntity.ok(itinerarioService.creaItinerarioConGiorni(DTO.getItinerarioCreateDTO(), 
-				DTO.getDestinazioneDTO(), DTO.getGiornoDTO())); 
+				DTO.getDestinazioneDTO(), DTO.getGiornoDTO(), authUserId));
+		
 	}
-	
-	//@PostMapping("/user/creazione/itinerario/con/giorni/e/tappe")
-	
-	
-	@PutMapping("/user/modifica/itinerario")
-	public ResponseEntity<?> modificaItinerario(@Valid @RequestBody 
-			ModificaItinerarioDTO DTO, @Min(1) @PathVariable Long IdItinerario){
-		itinerarioService.modificaItinerario(DTO.getItinerarioDTO(), IdItinerario, DTO.getGiornoDTO());
-		return (ResponseEntity<?>) ResponseEntity.noContent();
+
+	// MODIFICA: ho aggiunto /{idItinerario} nel path (prima mancava!)
+	@PutMapping("/user/modifica/itinerario/{idItinerario}")
+	public ResponseEntity<Void> modificaItinerario(
+			@Valid @RequestBody ModificaItinerarioDTO DTO,
+			@Min(1) @PathVariable Long idItinerario) {
+		itinerarioService.modificaItinerario(DTO.getItinerarioDTO(), idItinerario, DTO.getGiornoDTO());
+		return ResponseEntity.noContent().build();
 	}
-	
+
+	// CANCELLAZIONE
+	@DeleteMapping("/user/itinerario/{idItinerario}")
+	public ResponseEntity<Void> eliminaItinerario(@Min(1) @PathVariable Long idItinerario) {
+		itinerarioService.deleteItinerarioById(idItinerario);
+		return ResponseEntity.noContent().build();
+	}
+
 }

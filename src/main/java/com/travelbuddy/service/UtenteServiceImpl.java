@@ -20,17 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UtenteServiceImpl implements UtenteService{
-	
+
 	//Dependency Injection 
-	public final UtenteRepository utenteRepository; 
-	 private final PasswordEncoder passwordEncoder;
-	
+	private final UtenteRepository utenteRepository; 
+	private final PasswordEncoder passwordEncoder;
+
 	public UtenteServiceImpl(UtenteRepository utenteRepository, PasswordEncoder passwordEncoder ) {
 		this.utenteRepository = utenteRepository; 
 		this.passwordEncoder = passwordEncoder;
 	}
-	
-	
+
+
 	@Override
 	public List<Utente> findAllUtenti() {
 		return utenteRepository.findAll();
@@ -56,7 +56,7 @@ public class UtenteServiceImpl implements UtenteService{
 		return utente.orElseThrow(() -> new NotFoundException("Utente con "
 				+ "nickname " + nickname + " non trovato"));
 	}
-	
+
 	@Override
 	public Utente findUtenteByEmail(String email) {
 		if(email == null || email.isBlank()) {
@@ -66,8 +66,8 @@ public class UtenteServiceImpl implements UtenteService{
 		return utente.orElseThrow(() -> new NotFoundException("Utente con email " + email + " non"
 				+ " trovato"));
 	}
-	
-	
+
+
 	@Override
 	@Transactional
 	public Utente replaceUtenteById(UtenteReplaceDTO utenteDTO, Long id) {
@@ -80,26 +80,26 @@ public class UtenteServiceImpl implements UtenteService{
 		Optional<Utente> optUtente = utenteRepository.findById(id); 
 		Utente utenteEsistente = optUtente.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		if(utenteDTO.getNome() == null || utenteDTO.getCognome() == null || 
 				utenteDTO.getEmail() == null || (utenteDTO.getEta() < 18 || utenteDTO.getEta() == null) 
 				|| utenteDTO.getNickname() == null) {
 			throw new IllegalArgumentException("Tutti i campi sono obbligatori per il replace"); 
 		}
-		
+
 		utenteEsistente.setNome(utenteDTO.getNome()); 
 		utenteEsistente.setCognome(utenteDTO.getCognome());
 		utenteEsistente.setNickname(utenteDTO.getNickname()); 
 		utenteEsistente.setEta(utenteDTO.getEta());
 		utenteEsistente.setEmail(utenteDTO.getEmail());
-		
+
 		return utenteRepository.save(utenteEsistente);
 	}
 
 	@Override
 	@Transactional
 	public Utente updateUtenteById(UtenteUpdateDTO utenteDTO, Long id) {
-		
+
 		if(utenteDTO == null) {
 			throw new IllegalArgumentException("L'utente passato è nullo"); 
 		}
@@ -109,7 +109,7 @@ public class UtenteServiceImpl implements UtenteService{
 		Optional<Utente> optUtente = utenteRepository.findById(id); 
 		Utente utenteEsistente = optUtente.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		if(!(utenteDTO.getNome() == null || utenteDTO.getNome().isBlank())) {
 			utenteEsistente.setNome(utenteDTO.getNome());
 		}
@@ -125,29 +125,29 @@ public class UtenteServiceImpl implements UtenteService{
 		if(!(utenteDTO.getEmail() == null || utenteDTO.getEmail().isBlank())) {
 			utenteEsistente.setEmail(utenteDTO.getEmail());
 		}
-		
+
 		return utenteRepository.save(utenteEsistente);
-		
+
 	}
 
 	@Override
 	@Transactional
 	public Utente RegistrazioneNuovoUtente(UtenteCreateDTO utenteDTO) {
-		
+
 		if(utenteDTO == null) {
 			throw new IllegalArgumentException("Dati di registrazione mancanti"); 
 		}
-		
+
 		//il guest può creare un account se mette un'email o un nickname che non sono già presenti 
 		if(utenteRepository.existsByEmail(utenteDTO.getEmail())) {
 			throw new UserAlreadyExistsException("L'email " + utenteDTO.getEmail() + " è già "
 					+ "associato a un account"); 
 		}
-		
+
 		if(utenteRepository.existsByNickname(utenteDTO.getNickname())) {
 			throw new UserAlreadyExistsException("Il nickname scelto non è disponibile");
 		}
-		
+
 		//Creazione dell'utente 
 		Utente nuovoUtente = new Utente(); 
 		//il DTO, per come è configurato, controlla che tutti i campi siano validi e non nulli 
@@ -169,10 +169,10 @@ public class UtenteServiceImpl implements UtenteService{
 		Optional<Utente> utenteOpt = utenteRepository.findById(id);
 		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		utenteEsistente.setStatus(EnumStatus.DISATTIVO);
 		utenteRepository.save(utenteEsistente);
-		
+
 	}
 
 	@Override
@@ -180,10 +180,10 @@ public class UtenteServiceImpl implements UtenteService{
 		Optional<Utente> utenteOpt = utenteRepository.findById(id);
 		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		utenteEsistente.setStatus(EnumStatus.ATTIVO);
 		utenteRepository.save(utenteEsistente); 
-		
+
 	}
 
 	@Override
@@ -193,34 +193,27 @@ public class UtenteServiceImpl implements UtenteService{
 		Optional<Utente> utenteOpt = utenteRepository.findById(id);
 		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		utenteEsistente.setStatus(EnumStatus.BANNATO);
 		utenteRepository.save(utenteEsistente);
-		
+
 	}
 
 	@Override
 	public void deleteUtenteById(Long id) {
-		
+
 		if(id == null) {
 			throw new IllegalArgumentException("Id " + id + " nullo"); 
 		}
-		
+
 		Optional<Utente> utenteOpt = utenteRepository.findById(id); 
 		Utente utenteEsistente = utenteOpt.orElseThrow(() -> new NotFoundException("Utente con id " + id + " non"
 				+ " trovato"));
-		
+
 		utenteRepository.delete(utenteEsistente);
-		
-		
+
+
 	}
 
-
-	
-
-
-	
-	
-	
 
 }
