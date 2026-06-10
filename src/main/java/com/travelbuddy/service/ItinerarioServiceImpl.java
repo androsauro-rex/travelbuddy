@@ -147,13 +147,6 @@ public class ItinerarioServiceImpl implements ItinerarioService {
 		nuovoItinerario.setUtente(utenteEsistente);
 		
 		itinerarioRepository.save(nuovoItinerario);
-		
-		
-		
-
-
-
-		itinerarioRepository.save(nuovoItinerario);
 
 		Destinazione nuovaDestinazione = new Destinazione();
 		nuovaDestinazione.setNomeDestinazione(destinazioneDTO.getNomeDestinazione());
